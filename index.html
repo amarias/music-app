@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- CSS Styles -->
-  <link href="styles/reset.css" type="text/css" rel="stylesheet">
-  <link href="styles/styles.css" type="text/css" rel="stylesheet">
+  <link href="styles/reset.css" rel="stylesheet">
+  <link href="styles/styles.css" rel="stylesheet">
 
   <!-- Fonts -->
 
@@ -45,11 +45,9 @@
 
       <section>
         <h2>Help</h2>
-        <ul>
-          <li>Tutorial</li>
-          <li>Settings</li>
-          <li>Contact</li>
-        </ul>
+        <button>Tutorial</button>
+        <button>Settings</button>
+        <button>Contact</button>
       </section>
 
     </div>
@@ -58,12 +56,14 @@
 
 
   <!-- Collapsible Music Menu -->
-  <section>
+  <div>
     <div class="collapsible_container">
 
       <div class="collapsible_search-bar">
-        <button>Back</button>
+        <span>
+          <button>Back</button>
         Search Bar
+      </span>
       </div>
 
       <div class="collapsible_guitar">
@@ -128,13 +128,47 @@
       </div>
 
     </div>
-  </section>
+  </div>
 
 
 
   <!-- Music Editor -->
   <main>
     <div class="editor_container">
+
+        <div class="editor_controls-container">
+          <button>Rewind</button>
+          <button>Play</button>
+          <button>Pause</button>
+          <button>Stop</button>
+        </div>
+
+        <div class="editor_bottom-container">
+          <div class="editor_track-settings">
+            <span>
+              <label>Track 1</label>
+              <button>Mute</button>
+              <button>Loop</button>
+            </span>
+
+            <span>
+              <label>Track 2</label>
+              <button>Mute</button>
+              <button>Loop</button>
+            </span>
+
+            <span>
+              <label>Track 3</label>
+              <button>Mute</button>
+              <button>Loop</button>
+            </span>
+          </div>
+          <div class="editor_track-container">
+            <div class="editor_track"></div>
+            <div class="editor_track"></div>
+            <div class="editor_track"></div>
+          </div>
+        </div>
 
     </div>
   </main>

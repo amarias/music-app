@@ -1,22 +1,31 @@
+/* Temporary Colors being Used; Helps seperate the page during styling */
 
-  /* Temporary Colors being Used; Helps seperate the page during styling */
-
-.html {
+html {
   font-size: 62.5%;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 body {
+  display: flex;
   font-size: 1.6rem;
   font-family: sans-serif;
   line-height: 2rem;
   color: #242424;
+  width: 100vw;
+  height: 100vh;
+}
+
+button {
+  font-size: 1.8rem;
+  font-weight: normal;
+  border: none;
 }
 
 /* ~~~~~ Header ~~~~~ */
 
 .header_container {
   background-color: lightblue;
-  position: fixed;
   width: 10vw;
   height: 100%;
 }
@@ -27,18 +36,21 @@ body {
   height: 5vh;
 }
 
-h2 {
-  font-weight: bold;
+h1 {
+  font-size: 2.4rem;
 }
 
-.header_container button, ul li {
+h2 {
+  font-size: 2rem;
+  padding-bottom: 0.5rem;
+}
+
+.header_container button {
   display: inline-block;
   width: 100%;
-  font-size: 1.4rem;
-  font-weight: normal;
   text-align: left;
   background-color: inherit;
-  border: none;
+  padding: 0.5rem 0;
 }
 
 .header_container button:hover {
@@ -54,36 +66,91 @@ h2 {
 .collapsible_container {
   /*display: none;*/
   background-color: darkgrey;
-  position: fixed;
-  width:  20vw;
+  width: 20vw;
   height: 100%;
-  margin-left: 10vw;
+  overflow-y: scroll;
 }
 
 .collapsible_search-bar {
   /*display: none;*/
+  display: inline;
+  position: fixed;
   width: inherit;
   height: 5vh;
 }
 
 .collapsible_guitar, .collapsible_bass, .collapsible_percussion, .collapsible_strings, .collapsible_brass, .collapsible_woodwind, .collapsible_voice, .collapsible_sounds, .collapsible_snippets, .collapsible_imported {
   /*display: none;*/
-  width: inherit;
-  height: inherit;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  height: 100%;
+  margin-top: 5vh;
 }
 
 .collapsible_container ul li {
   text-align: center;
   margin: 0;
+  border-bottom: 1px solid #242424;
 }
 
 /* ~~~~~ Editor ~~~~~ */
 
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  width: inherit;
+  min-height: 100%;
+  overflow-y: scroll;
+}
+
 .editor_container {
   background-color: purple;
-  min-height: 100vh;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  height: 40vh;
+}
+
+.editor_controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10vh;
+}
+
+.editor_controls-container button {
+  margin: 0 1rem;
+}
+
+.editor_bottom-container {
+  display: flex;
+  align-items: center;
+}
+
+.editor_track-settings {
+  display: flex;
+  flex-direction: column;
+  background-color: orange;
+}
+
+.editor_track-settings span {
+  text-align: center;
+  width: 10vw;
+  height: 10vh;
+  border-bottom: 1px solid grey;
+}
+
+.editor_track-container {
+  width: 100%;
+  height: inherit;
+  overflow-x: scroll;
   overflow-y: hidden;
+}
+
+.editor_track {
+  background-color: pink;
+  min-width: 100%;
+  height: 9vh;
+  border-bottom: 1px solid white;
 }
