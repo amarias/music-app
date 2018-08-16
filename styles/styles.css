@@ -25,7 +25,8 @@ button {
 /* ~~~~~ Header ~~~~~ */
 
 .header_container {
-  background-color: lightblue;
+  background-color: #222;
+  background-color: #04050b;
   width: 10vw;
   height: 100%;
 }
@@ -38,23 +39,28 @@ button {
 
 h1 {
   font-size: 2.4rem;
+  color: #B0B0B0;
 }
 
 h2 {
   font-size: 2rem;
-  padding-bottom: 0.5rem;
+  padding: 0 0 0.5rem 1rem;
+  color: #45B294;
 }
 
 .header_container button {
   display: inline-block;
+  color: #B0B0B0;
   width: 100%;
   text-align: left;
   background-color: inherit;
-  padding: 0.5rem 0;
+  padding: 0.5rem 2.5rem;
 }
 
 .header_container button:hover {
-  background-color: green;
+  /*background-color: #45B294;
+  color: #242424;*/
+  padding-left: 3.5rem;
 }
 
 .header_container section:last-child {
@@ -65,7 +71,10 @@ h2 {
 
 .collapsible_container {
   /*display: none;*/
-  background-color: darkgrey;
+  background-color: #6D828A;
+  background-color: #333;
+  background-image: linear-gradient(#242424, #333);
+  color: #B0B0B0;
   width: 20vw;
   height: 100%;
   overflow-y: scroll;
@@ -73,10 +82,31 @@ h2 {
 
 .collapsible_search-bar {
   /*display: none;*/
-  display: inline;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*background-image: linear-gradient(#45B294, #14332A);*/
+  background-color: #242424;
+  border-bottom: 1px solid #b0b0b0;
   position: fixed;
   width: inherit;
   height: 5vh;
+}
+
+.collapsible_search-bar button {
+  background-color: #242424;
+  color: #45B294;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-right: 1.5rem;
+}
+
+.collapsible_search-bar form input {
+  width: 15vw;
+  margin-right: 3rem;
+  border-radius: 1rem;
+  border: none;
+  text-indent: 1rem;
 }
 
 .collapsible_guitar, .collapsible_bass, .collapsible_percussion, .collapsible_strings, .collapsible_brass, .collapsible_woodwind, .collapsible_voice, .collapsible_sounds, .collapsible_snippets, .collapsible_imported {
@@ -88,7 +118,7 @@ h2 {
 .collapsible_container ul li {
   text-align: center;
   margin: 0;
-  border-bottom: 1px solid #242424;
+  border-bottom: 2px solid #333;
 }
 
 /* ~~~~~ Editor ~~~~~ */
@@ -97,24 +127,37 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: red;
+  background-color: #04050b;
   width: inherit;
   min-height: 100%;
-  overflow-y: scroll;
+  overflow-y: visible;
+}
+
+.editor_colors {
+  width: 30vw;
+  height: 30vh;
+  background-color: blue;
+  display: block;
+  position: fixed;
+  z-index: 1;
+  display: none;
 }
 
 .editor_container {
-  background-color: purple;
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: 60vw;
   height: 40vh;
+  z-index: 1;
 }
 
 .editor_controls-container {
+  background-color: #45B294;
+  background-image: linear-gradient(#45B294, #14332A);
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1rem 1rem 0 0;
   width: 100%;
   height: 10vh;
 }
@@ -126,31 +169,47 @@ main {
 .editor_bottom-container {
   display: flex;
   align-items: center;
+  height: 30vh;
 }
 
 .editor_track-settings {
   display: flex;
   flex-direction: column;
-  background-color: orange;
+  background-color: #333;
+  background-image: linear-gradient(#242424, #303030);
+  color: #b0b0b0;
+  font-weight: bold;
 }
 
 .editor_track-settings span {
-  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   width: 10vw;
   height: 10vh;
   border-bottom: 1px solid grey;
 }
 
+.editor_track-settings button {
+  background-color: grey;
+  width: 1.5vw;
+  height: 2.5vh;
+}
+
 .editor_track-container {
   width: 100%;
+  opacity: 0.7;
   height: inherit;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
 }
 
 .editor_track {
-  background-color: pink;
-  min-width: 100%;
-  height: 9vh;
+  box-sizing: border-box;
+  background-color: #333;
+  height: 10vh;
   border-bottom: 1px solid white;
+  overflow-y: hidden;
+  overflow-x: visible;
 }

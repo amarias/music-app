@@ -60,10 +60,10 @@
     <div class="collapsible_container">
 
       <div class="collapsible_search-bar">
-        <span>
-          <button>Back</button>
-        Search Bar
-      </span>
+        <button>&larr;</button>
+        <form>
+          <input type="text" placeholder="Search">
+        </form>
       </div>
 
       <div class="collapsible_guitar">
@@ -134,41 +134,44 @@
 
   <!-- Music Editor -->
   <main>
+
+    <div class="editor_colors"></div>
+
     <div class="editor_container">
 
-        <div class="editor_controls-container">
-          <button>Rewind</button>
-          <button>Play</button>
-          <button>Pause</button>
-          <button>Stop</button>
-        </div>
+      <div class="editor_controls-container">
+        <button>Rewind</button>
+        <button>Play</button>
+        <button>Pause</button>
+        <button>Stop</button>
+      </div>
 
-        <div class="editor_bottom-container">
-          <div class="editor_track-settings">
-            <span>
+      <div class="editor_bottom-container">
+        <div class="editor_track-settings">
+          <span>
               <label>Track 1</label>
               <button>Mute</button>
               <button>Loop</button>
             </span>
 
-            <span>
+          <span>
               <label>Track 2</label>
               <button>Mute</button>
               <button>Loop</button>
             </span>
 
-            <span>
+          <span>
               <label>Track 3</label>
               <button>Mute</button>
               <button>Loop</button>
             </span>
-          </div>
-          <div class="editor_track-container">
-            <div class="editor_track"></div>
-            <div class="editor_track"></div>
-            <div class="editor_track"></div>
-          </div>
         </div>
+        <div class="editor_track-container">
+          <div class="editor_track"></div>
+          <div class="editor_track"></div>
+          <div class="editor_track"></div>
+        </div>
+      </div>
 
     </div>
   </main>
