@@ -1,39 +1,86 @@
-let musicMenuBtns = document.getElementsByClassName("header_music-menu")[0].querySelectorAll("button");
-let backArrowBtn = document.getElementsByClassName("sound_search-bar")[0].querySelector("button");
-let soundContainer = document.getElementsByClassName("sound_container");
+let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
+let backBtn = document.getElementsByClassName("back_btn");
 let i;
 
-for (i = 0; i < musicMenuBtns.length; i++) {
-  musicMenuBtns[i].addEventListener("click", toggleSoundMenu);
-  backArrowBtn.addEventListener("click", toggleSoundMenu);
+/* Adds event listeners to all btns in header and the back btns */
+for (i = 0; i < headerBtns.length; i++) {
+  if (headerBtns[i].innerText.toLowerCase() === "tutorial") {
+    // Add tutorial listener
+    continue;
+  } else {
+    headerBtns[i].addEventListener("click", toggleSecondMenu);
+  }
+
+  if (i < backBtn.length) {
+    backBtn[i].addEventListener("click", toggleSecondMenu);
+  }
 }
 
-function toggleSoundMenu() {
+/* Returns name of the second menu's container, header, and content based on given header btn */
+function getSecondMenuNames(btn) {
 
-  let previousSelected = document.getElementsByClassName("header_music-menu")[0].querySelector("button.selected");
+  let container;
+  let header;
+  let content;
+  let btnName = btn.innerText.toLowerCase();
 
-  let soundList = document.getElementsByClassName("sound_list " + this.innerText.toLowerCase());
+  switch (btnName) {
+    case "settings":
+      container = "settings_container";
+      header = "settings_header";
+      content = "settings_content";
+      break;
+    case "contact":
+      container = "contact_container";
+      header = "contact_header";
+      content = "contact_content";
+      break;
+    default:
+      container = "sound_container";
+      header = "sound_header";
+      content = "sound_list " + btnName;
+  }
 
-// check if this button clicked is the same as the previous one (trying to unselect)
-  if (this === previousSelected) {
-    this.classList.remove("selected");
-    soundContainer[0].classList.remove("active");
-    soundList[0].classList.remove("active");
+  return [container, header, content];
+}
+
+/* Displays second menu based on given header btn */
+function showSecondMenu(btn) {
+
+  let btnNameArray = getSecondMenuNames(btn);
+
+  document.getElementsByClassName(btnNameArray[0])[0].classList.add("active");
+  document.getElementsByClassName(btnNameArray[2])[0].classList.add("active");
+}
+
+/* Removes display of second menu based on given btn */
+function removeSecondMenu(btn) {
+
+  let btnNameArray = getSecondMenuNames(btn);
+
+  document.getElementsByClassName(btnNameArray[0])[0].classList.remove("active");
+  document.getElementsByClassName(btnNameArray[2])[0].classList.remove("active");
+}
+
+/* Either displays or removes second menu based on what button was pressed */
+function toggleSecondMenu() {
+
+  // Search for a previously selected btn
+  let prevSelected = document.querySelector("button.selected");
+
+  if (prevSelected) {
+    prevSelected.classList.remove("selected");
+    removeSecondMenu(prevSelected);
   } else {
-    // check if we have clicked another button previously
-    if (previousSelected) {
-      previousSelected.classList.remove("selected");
-      let previousSoundList = document.getElementsByClassName("sound_list " + previousSelected.innerText.toLowerCase());
-      previousSoundList[0].classList.remove("active");
-    }
-    // check if we are clicking the back arrow
-    if (this === backArrowBtn) {
-      soundContainer[0].classList.remove("active");
-    } else {
-      this.classList.add("selected");
-      soundContainer[0].classList.add("active");
-      soundList[0].classList.add("active");
-    }
+    this.classList.add("selected");
+    showSecondMenu(this);
+    return;
+  }
+
+  // Check the button type; that it isn't the same button pressed twice or the back btn
+  if ((this != prevSelected) && (this.innerText != backBtn[0].innerText)) {
+    this.classList.add("selected");
+    showSecondMenu(this);
   }
 
 }

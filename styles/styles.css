@@ -57,6 +57,10 @@ li {
   border-bottom: 2px solid #333;
 }
 
+select {
+  padding: 0.3rem;
+}
+
 /* ~~~~~ Header Classes ~~~~~ */
 
 .header_container {
@@ -67,11 +71,11 @@ li {
 .header_logo {
   display: inline-block;
   width: 100%;
-  height: 5vh;
+  height: 10vh;
 }
 
 .header_help-menu {
-  margin-top: 5vh;
+  margin-top: 10vh;
 }
 
 .selected {
@@ -79,30 +83,37 @@ li {
   color: #242424;
 }
 
-/* ~~~~~ Sound Menu Classes ~~~~~ */
+/* ~~~~~ Menu Classes ~~~~~ */
 
-.sound_container {
+.sound_container, .settings_container, .contact_container {
   display: none;
   width: 20vw;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-image: linear-gradient(#242424, #333);
 }
 
-.sound_search-bar {
+.sound_header, .settings_header, .contact_header {
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
   width: inherit;
-  height: 5vh;
+  height: 10vh;
   background-color: #242424;
   border-bottom: 1px solid #B0B0B0;
 }
 
+.settings_header, .contact_header {
+  justify-content: flex-start;
+}
+
+.sound_list, .settings_content, .contact_content {
+  margin-top: 10vh;
+}
+
 .sound_list {
   display: none;
-  margin-top: 5vh;
 }
 
 /* ~~~~~ Music Editor Classes ~~~~~ */
@@ -201,22 +212,49 @@ li {
   text-indent: 1rem;
 }
 
-/* ~~~~~ Sound: Higher Specificity ~~~~~ */
+/* ~~~~~ Menus: Higher Specificity ~~~~~ */
 
-.sound_search-bar button {
+.sound_header button {
+  position: absolute;
+}
+
+.sound_header button, .settings_header button, .contact_header button {
   background-color: inherit;
   color: #45B294;
   font-weight: bold;
   font-size: 2.5rem;
-  margin-right: 1.5rem;
+  left: 0;
 }
 
-.sound_search-bar input {
+.sound_header input {
   width: 15vw;
   border: none;
   text-indent: 1rem;
-  margin-right: 3rem;
   border-radius: 1rem;
+}
+
+.settings_header h2, .contact_header h2 {
+  color: #B0B0B0;
+}
+
+.settings_content div {
+  border: 1px solid #B0B0B0;
+  box-sizing: border-box;
+  margin: 0 4.5rem 0 4.5rem;
+  background-color: #242424;
+}
+
+.settings_content h2 {
+  padding: 4rem 4.5rem 2rem 4.5rem;
+}
+
+.settings_content span {
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.settings_language select {
+  width: 100%;
 }
 
 /* ~~~~~ Editor: Higher Specificity ~~~~~ */
@@ -255,7 +293,6 @@ li {
 .modal_container button:hover {
   color: #45b294;
 }
-
 
 /* ~~~~~ Active: Unhides Elements ~~~~~ */
 
