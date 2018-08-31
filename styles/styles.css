@@ -34,6 +34,15 @@ h2 {
   color: #45B294;
 }
 
+h3 {
+  font-weight: bold;
+  line-height: 2rem;
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+
 button {
   background-color: inherit;
   border: none;
@@ -53,9 +62,7 @@ span {
 
 li {
   border-bottom: 2px solid #333;
-  line-height: 4.6rem;
-  text-align: center;
-  height: 5vh;
+  padding: 1rem;
 }
 
 select {
@@ -115,6 +122,27 @@ select {
 
 .sound_list {
   display: none;
+}
+
+.sound_player {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 1rem 3rem;
+}
+
+.sound_play-btn {
+  background-color: #eee;
+  color: #242424;
+}
+
+.sound_info {
+  width: 100%;
+  text-indent: 2rem;
+}
+
+.sound_time {
+    margin: auto;
 }
 
 /* ~~~~~ Music Editor Classes ~~~~~ */

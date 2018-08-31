@@ -1,10 +1,14 @@
+
+/* ~~~~~ Global Variables ~~~~~ */
+
 let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
 let backBtn = document.getElementsByClassName("back_btn");
+let playBtns = document.getElementsByClassName("sound_play-btn");
+let soundTime = document.getElementsByClassName("sound_time");
 
-let search = document.getElementsByName("sound_search-bar")[0];
-search.addEventListener("change", filter);
 
-/* Adds event listeners to all btns in header and the back btns */
+/* ~~~~~ Loop and Functions ~~~~~ */
+
 for (let i = 0; i < headerBtns.length; i++) {
   if (headerBtns[i].innerText.toLowerCase() === "tutorial") {
     // Add tutorial listener
@@ -18,7 +22,7 @@ for (let i = 0; i < headerBtns.length; i++) {
   }
 }
 
-/* Returns name of the second menu's container, header, and content based on given header btn */
+// Returns name of the second menu's container, header, and content based on given header btn
 function getSecondMenuNames(btn) {
 
   let container;
@@ -46,7 +50,6 @@ function getSecondMenuNames(btn) {
   return [container, header, content];
 }
 
-/* Displays second menu based on given header btn */
 function showSecondMenu(btn) {
 
   if (btn.innerText.toLowerCase() === "all") {
@@ -63,7 +66,6 @@ function showSecondMenu(btn) {
   document.getElementsByClassName(btnNameArray[2])[0].classList.add("active");
 }
 
-/* Removes display of second menu based on given btn */
 function removeSecondMenu(btn) {
 
   if (btn.innerText.toLowerCase() === "all") {
@@ -80,7 +82,7 @@ function removeSecondMenu(btn) {
   document.getElementsByClassName(btnNameArray[2])[0].classList.remove("active");
 }
 
-/* Either displays or removes second menu based on what button was pressed */
+// Either displays or removes second menu based on what button was pressed
 function toggleSecondMenu() {
 
   // Search for a previously selected btn
@@ -103,6 +105,10 @@ function toggleSecondMenu() {
 
 }
 
+let search = document.getElementsByName("sound_search-bar")[0];
+search.addEventListener("change", filter);
+
+// Filters through the currently displayed list of sounds based on user input
 function filter() {
 
   let filter = search.value.toLowerCase();
@@ -116,4 +122,52 @@ function filter() {
     }
   }
 
+}
+
+for (let i = 0; i < playBtns.length; i++) {
+  playBtns[i].addEventListener("click", handleSound);
+  addTimeStamp(soundTime[i], playBtns[i]);
+}
+
+function getAudioElement(btn){
+  let audioName = btn.nextElementSibling.children;
+  let audio = document.getElementById(audioName[0].innerText.toLowerCase());
+
+  return audio;
+}
+
+// returns a leading zero if the given number is less than 10
+function pad(num) {
+  if (num < 10) {
+    return "0" + num;
+  } else {
+    return num;
+  }
+}
+
+// Handles play button
+function handleSound() {
+  let audio = getAudioElement(this);
+  let btn = this;
+
+  audio.addEventListener("pause", function(){
+    btn.innerText = "Play";
+  });
+
+  // Check if audio is currently playing
+  if (!audio.ended && !audio.paused) {
+    btn.innerText = "Play";
+    audio.pause();
+    audio.currentTime = 0;
+  } else {
+    btn.innerText = "Stop";
+    audio.play();
+  }
+}
+
+function addTimeStamp(timeStamp, btn) {
+  let audio = getAudioElement(btn);
+  let time = audio.duration;
+
+  timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
 }

@@ -31,6 +31,7 @@
       <section class="header_music-menu">
         <h2>Music</h2>
         <button>Guitar</button>
+        <button>Piano</button>
         <button>Bass</button>
         <button>Percussion</button>
         <button>Strings</button>
@@ -39,7 +40,6 @@
         <button>Voice</button>
         <button>Sounds</button>
         <button>Snippets</button>
-        <button>Imported</button>
         <button>All</button>
       </section>
 
@@ -69,6 +69,24 @@
         <ul>
           <li>Guitar 1</li>
           <li>Guitar 2</li>
+        </ul>
+      </div>
+
+      <div class="sound_list piano">
+        <ul>
+          <li>
+            <audio id="test" preload="metadata">
+              <source src="sounds/test.mp3" type="audio/mpeg"/>
+            </audio>
+            <div class="sound_player">
+              <button class="sound_play-btn">Play</button>
+              <div class="sound_info">
+                <h3>Test</h3>
+                <h4>Me</h4>
+              </div>
+              <div class="sound_time"></div>
+            </div>
+          </li>
         </ul>
       </div>
 
@@ -117,12 +135,6 @@
       <div class="sound_list snippets">
         <ul>
           <li>Snippets 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list imported">
-        <ul>
-          <li>+ Add</li>
         </ul>
       </div>
 
@@ -213,19 +225,16 @@
           <span>
               <label>Track 1</label>
               <button>Mute</button>
-              <button>Loop</button>
             </span>
 
           <span>
               <label>Track 2</label>
               <button>Mute</button>
-              <button>Loop</button>
             </span>
 
           <span>
               <label>Track 3</label>
               <button>Mute</button>
-              <button>Loop</button>
             </span>
         </div>
         <div class="editor_track-container">
