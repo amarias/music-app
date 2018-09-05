@@ -74,7 +74,8 @@
 
       <div class="sound_list piano">
         <ul>
-          <li>
+
+          <li id="testing" draggable="true" ondragstart="dragstart_handler(event);" ondragend="dragend_handler(event);">
             <audio id="test" preload="metadata">
               <source src="sounds/test.mp3" type="audio/mpeg"/>
             </audio>
@@ -87,6 +88,7 @@
               <div class="sound_time"></div>
             </div>
           </li>
+
         </ul>
       </div>
 
@@ -238,9 +240,9 @@
             </span>
         </div>
         <div class="editor_track-container">
-          <div class="editor_track"></div>
-          <div class="editor_track"></div>
-          <div class="editor_track"></div>
+          <div class="editor_track" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" ondragleave="dragleave_handler(event);" ></div>
+          <div class="editor_track" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" ondragleave="dragleave_handler(event);" ></div>
+          <div class="editor_track" ondrop="drop_handler(event);" ondragover="dragover_handler(event);" ondragleave="dragleave_handler(event);" ></div>
         </div>
       </div>
 

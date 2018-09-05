@@ -5,7 +5,7 @@ let headerBtns = document.getElementsByClassName("header_container")[0].querySel
 let backBtn = document.getElementsByClassName("back_btn");
 let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
-
+let search = document.getElementsByName("sound_search-bar")[0];
 
 /* ~~~~~ Loop and Functions ~~~~~ */
 
@@ -105,7 +105,6 @@ function toggleSecondMenu() {
 
 }
 
-let search = document.getElementsByName("sound_search-bar")[0];
 search.addEventListener("change", filter);
 
 // Filters through the currently displayed list of sounds based on user input
@@ -170,4 +169,31 @@ function addTimeStamp(timeStamp, btn) {
   let time = audio.duration;
 
   timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
+}
+
+function dragstart_handler(e){
+  e.currentTarget.style.opacity = 0.5;
+  e.dataTransfer.setData("text", e.currentTarget.id);
+  e.dataTransfer.effectAllowed = "copy";
+}
+
+function dragend_handler(e){
+  e.currentTarget.style.opacity = "";
+}
+
+function dragover_handler(e){
+  e.preventDefault();
+  e.currentTarget.style.backgroundColor = "inherit";
+}
+
+function dragleave_handler(e){
+  e.currentTarget.style.backgroundColor = "";
+}
+
+function drop_handler(e){
+  e.preventDefault();
+  let data = e.dataTransfer.getData("text");
+  // Copy the element
+  e.target.appendChild(document.getElementById(data).cloneNode(true));
+  e.currentTarget.style.backgroundColor = "";
 }
