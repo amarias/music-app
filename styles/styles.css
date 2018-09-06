@@ -129,6 +129,7 @@ select {
   align-items: center;
   box-sizing: border-box;
   padding: 1rem 3rem;
+  text-indent: 2rem;
 }
 
 .sound_play-btn {
@@ -138,11 +139,25 @@ select {
 
 .sound_info {
   width: 100%;
-  text-indent: 2rem;
 }
 
 .sound_time {
-    margin: auto;
+  margin: auto;
+}
+
+.li-new-style {
+  list-style-type: none;
+  border: 0;
+}
+
+.sound_info-new-style {
+  background-color: #45B294;
+  color: #242424;
+  width: 5vw;
+  height: 8vh;
+  padding: 0;
+  text-align: center;
+  text-indent: 0;
 }
 
 /* ~~~~~ Music Editor Classes ~~~~~ */
@@ -198,6 +213,8 @@ select {
 }
 
 .editor_track {
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   background-color: #333;
   height: 10vh;

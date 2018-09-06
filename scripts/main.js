@@ -192,8 +192,19 @@ function dragleave_handler(e){
 
 function drop_handler(e){
   e.preventDefault();
-  let data = e.dataTransfer.getData("text");
-  // Copy the element
-  e.target.appendChild(document.getElementById(data).cloneNode(true));
+  let dataName = e.dataTransfer.getData("text");
+  let data = document.getElementById(dataName).cloneNode(true);
+  let player = data.firstElementChild.nextElementSibling;
+
+  // Leave only the audio and its info
+  player.removeChild(player.firstElementChild);
+  player.removeChild(player.lastElementChild);
+
+  // New styling
+  data.style.opacity = "";
+  data.classList.add("li-new-style");
+  player.classList.add("sound_info-new-style");
+
+  e.target.appendChild(data);
   e.currentTarget.style.backgroundColor = "";
 }
