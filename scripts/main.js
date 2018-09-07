@@ -174,23 +174,23 @@ function addTimeStamp(timeStamp, btn) {
 function dragstart_handler(e){
   e.currentTarget.style.opacity = 0.5;
   e.dataTransfer.setData("text", e.currentTarget.id);
-  e.dataTransfer.effectAllowed = "copy";
+  e.dataTransfer.effectAllowed = "copyMove";
 }
 
 function dragend_handler(e){
   e.currentTarget.style.opacity = "";
 }
 
-function dragover_handler(e){
+function dragover_handler(e, track){
   e.preventDefault();
-  e.currentTarget.style.backgroundColor = "inherit";
+  track.style.backgroundColor = "inherit";
 }
 
-function dragleave_handler(e){
-  e.currentTarget.style.backgroundColor = "";
+function dragleave_handler(e, track){
+  track.style.backgroundColor = "";
 }
 
-function drop_handler(e){
+function drop_handler(e, track) {
   e.preventDefault();
   let dataName = e.dataTransfer.getData("text");
   let data = document.getElementById(dataName).cloneNode(true);
@@ -205,6 +205,6 @@ function drop_handler(e){
   data.classList.add("li-new-style");
   player.classList.add("sound_info-new-style");
 
-  e.target.appendChild(data);
-  e.currentTarget.style.backgroundColor = "";
+  track.appendChild(data);
+  track.style.backgroundColor = "";
 }
