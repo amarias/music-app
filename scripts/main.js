@@ -181,16 +181,31 @@ function dragend_handler(e){
   e.currentTarget.style.opacity = "";
 }
 
-function dragover_handler(e, track){
+function dragover_handler(e, el) {
   e.preventDefault();
-  track.style.backgroundColor = "inherit";
+
+  if (el.classList.contains("li-new-style")) {
+    let third = el.offsetWidth / 3;
+
+    // Check if mouse is towards the left
+    if (e.offsetX <= third ) {
+      el.style.borderLeft = "1px solid pink";
+    } else if (e.offsetX >= (third * 2)) {
+      el.style.borderRight = "1px solid red";
+    }
+
+  } else {
+    el.style.backgroundColor = "inherit";
+  }
 }
 
-function dragleave_handler(e, track){
-  track.style.backgroundColor = "";
+function dragleave_handler(e, el){
+  el.style.backgroundColor = "";
+  el.style.borderLeft = "";
+  el.style.borderRight = "";
 }
 
-function drop_handler(e, track) {
+function drop_handler(e, el) {
   e.preventDefault();
   let dataName = e.dataTransfer.getData("text");
   let data = document.getElementById(dataName).cloneNode(true);
@@ -205,6 +220,11 @@ function drop_handler(e, track) {
   data.classList.add("li-new-style");
   player.classList.add("sound_info-new-style");
 
-  track.appendChild(data);
-  track.style.backgroundColor = "";
+  if(el.classList.contains("editor_track")){
+    el.appendChild(data);
+  }
+  
+  el.style.backgroundColor = "";
+  el.style.borderLeft = "";
+  el.style.borderRight = "";
 }

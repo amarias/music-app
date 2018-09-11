@@ -75,7 +75,7 @@
       <div class="sound_list piano">
         <ul>
 
-          <li id="testing" draggable="true" ondragstart="dragstart_handler(event);" ondragend="dragend_handler(event);">
+          <li id="piano_1" draggable="true" ondragstart="dragstart_handler(event);" ondragover="dragover_handler(event, this)" ondragleave="dragleave_handler(event, this)" ondragend="dragend_handler(event);" ondrop="drop_handler(event, this)">
             <audio id="test" preload="metadata">
               <source src="sounds/test.mp3" type="audio/mpeg"/>
             </audio>
@@ -83,6 +83,20 @@
               <button class="sound_play-btn">Play</button>
               <div class="sound_info">
                 <h3>Test</h3>
+                <h4>Me</h4>
+              </div>
+              <div class="sound_time"></div>
+            </div>
+          </li>
+
+          <li id="piano_2" draggable="true" ondragstart="dragstart_handler(event);" ondragover="dragover_handler(event, this)" ondragleave="dragleave_handler(event, this)" ondragend="dragend_handler(event);" ondrop="drop_handler(event, this)">
+            <audio id="test2" preload="metadata">
+              <source src="sounds/test2.mp3" type="audio/mpeg"/>
+            </audio>
+            <div class="sound_player">
+              <button class="sound_play-btn">Play</button>
+              <div class="sound_info">
+                <h3>Test2</h3>
                 <h4>Me</h4>
               </div>
               <div class="sound_time"></div>
