@@ -6,6 +6,7 @@ let backBtn = document.getElementsByClassName("back_btn");
 let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
 let search = document.getElementsByName("sound_search-bar")[0];
+let refNode;
 
 /* ~~~~~ Loop and Functions ~~~~~ */
 
@@ -171,6 +172,20 @@ function addTimeStamp(timeStamp, btn) {
   timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
 }
 
+// Returns true if mouse is more towards the left of the element than the right
+function isLeft(e, el) {
+
+  let third = el.offsetWidth / 3;
+
+  if (e.offsetX <= third ) {
+    return true;
+  }
+
+  if (e.offsetX >= (third * 2)) {
+    return false;
+  }
+}
+
 function dragstart_handler(e){
   e.currentTarget.style.opacity = 0.5;
   e.dataTransfer.setData("text", e.currentTarget.id);
@@ -184,14 +199,15 @@ function dragend_handler(e){
 function dragover_handler(e, el) {
   e.preventDefault();
 
+  // Check if dragging over a sound or the tracks
   if (el.classList.contains("li-new-style")) {
-    let third = el.offsetWidth / 3;
 
-    // Check if mouse is towards the left
-    if (e.offsetX <= third ) {
-      el.style.borderLeft = "1px solid pink";
-    } else if (e.offsetX >= (third * 2)) {
-      el.style.borderRight = "1px solid red";
+    if (isLeft(e, el)) {
+      el.style.borderLeft = "1px solid #eee";
+      refNode = el;
+    } else {
+      el.style.borderRight = "1px solid #eee";
+      refNode = el.nextElementSibling;
     }
 
   } else {
@@ -220,10 +236,15 @@ function drop_handler(e, el) {
   data.classList.add("li-new-style");
   player.classList.add("sound_info-new-style");
 
-  if(el.classList.contains("editor_track")){
-    el.appendChild(data);
+  // Add sound to the track
+  if (el.classList.contains("editor_track")) {
+    if (refNode != undefined) {
+      el.insertBefore(data, refNode);
+    } else {
+      el.appendChild(data);
+    }
   }
-  
+
   el.style.backgroundColor = "";
   el.style.borderLeft = "";
   el.style.borderRight = "";
