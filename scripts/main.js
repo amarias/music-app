@@ -238,7 +238,7 @@ function drop_handler(e, el) {
 
   // Add sound to the track
   if (el.classList.contains("editor_track")) {
-    if (refNode != undefined) {
+    if (refNode != undefined && el.contains(refNode)) {
       el.insertBefore(data, refNode);
     } else {
       el.appendChild(data);
