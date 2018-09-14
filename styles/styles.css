@@ -145,12 +145,12 @@ select {
   margin: auto;
 }
 
-.li-new-style {
+.li-on-track {
   list-style-type: none;
   border: 0;
 }
 
-.sound_info-new-style {
+.sound_info-on-track {
   background-color: #45B294;
   color: #242424;
   width: 5vw;

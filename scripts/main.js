@@ -6,6 +6,7 @@ let backBtn = document.getElementsByClassName("back_btn");
 let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
 let search = document.getElementsByName("sound_search-bar")[0];
+let soundOnTrack = 0; // Number of sounds that have ever been on the track
 let refNode;
 
 /* ~~~~~ Loop and Functions ~~~~~ */
@@ -172,10 +173,25 @@ function addTimeStamp(timeStamp, btn) {
   timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
 }
 
-// Returns true if mouse is more towards the left of the element than the right
-function isLeft(e, el) {
+// sound_list Items: drag and drop handlers
 
-  let third = el.offsetWidth / 3;
+function onDragStart(e){
+  e.currentTarget.style.opacity = 0.5;
+  e.dataTransfer.setData("text", e.currentTarget.id);
+  e.dataTransfer.effectAllowed = "copy";
+}
+
+function onDragEnd(e) {
+  e.currentTarget.style = "";
+}
+
+
+// Sound Nodes: drag and drop handlers
+
+// Returns true if mouse is more towards the left of the element than the right
+function isLeft(e) {
+
+  let third = e.currentTarget.offsetWidth / 3;
 
   if (e.offsetX <= third ) {
     return true;
@@ -186,66 +202,79 @@ function isLeft(e, el) {
   }
 }
 
-function dragstart_handler(e){
+function onSoundInfoDragStart(e){
   e.currentTarget.style.opacity = 0.5;
   e.dataTransfer.setData("text", e.currentTarget.id);
-  e.dataTransfer.effectAllowed = "copyMove";
+  e.dataTransfer.effectAllowed = "move";
 }
 
-function dragend_handler(e){
-  e.currentTarget.style.opacity = "";
-}
-
-function dragover_handler(e, el) {
+function onSoundInfoDragOver(e){
   e.preventDefault();
+  if (isLeft(e)) {
+    e.currentTarget.style.borderLeft = "1px solid #eee";
+    refNode = e.currentTarget;
+  } else {
+    e.currentTarget.style.borderRight = "1px solid #eee";
+    refNode = e.currentTarget.nextElementSibling;
+  }
+}
 
-  // Check if dragging over a sound or the tracks
-  if (el.classList.contains("li-new-style")) {
+function onSoundInfoDragLeave(e){
+  e.currentTarget.style = "";
+}
 
-    if (isLeft(e, el)) {
-      el.style.borderLeft = "1px solid #eee";
-      refNode = el;
+// Tracks: drag and drop handlers
+
+function onDragOver(e){
+  e.preventDefault();
+  e.currentTarget.style.backgroundColor = "inherit";
+  e.dataTransfer.dropEffect = "copyMove";
+}
+
+function onDragLeave(e){
+  e.currentTarget.style = "";
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  e.currentTarget.style = "";
+
+  let draggedData;
+
+  if (e.dataTransfer.dropEffect === "copy") {
+
+    draggedData = document.getElementById(e.dataTransfer.getData("text")).cloneNode(true);
+    let soundInfo = draggedData.firstElementChild.nextElementSibling;
+
+    soundInfo.removeChild(soundInfo.firstElementChild);
+    soundInfo.removeChild(soundInfo.lastElementChild);
+
+    draggedData.style.opacity = "";
+    draggedData.classList.add("li-on-track");
+    soundInfo.classList.add("sound_info-on-track");
+
+    draggedData.addEventListener("dragstart", function(event){ onSoundInfoDragStart(event); }, false);
+    draggedData.addEventListener("dragover", function(event){ onSoundInfoDragOver(event); }, false);
+    draggedData.addEventListener("dragleave", function(event){ onSoundInfoDragLeave(event); }, false);
+
+    soundOnTrack += 1;
+    draggedData.id = "sound_on-track-" + soundOnTrack;
+
+    if (refNode != undefined && e.currentTarget.contains(refNode)) {
+      e.currentTarget.insertBefore(draggedData, refNode);
     } else {
-      el.style.borderRight = "1px solid #eee";
-      refNode = el.nextElementSibling;
+      e.currentTarget.appendChild(draggedData);
     }
 
   } else {
-    el.style.backgroundColor = "inherit";
-  }
-}
 
-function dragleave_handler(e, el){
-  el.style.backgroundColor = "";
-  el.style.borderLeft = "";
-  el.style.borderRight = "";
-}
+    draggedData = document.getElementById(e.dataTransfer.getData("text"));
 
-function drop_handler(e, el) {
-  e.preventDefault();
-  let dataName = e.dataTransfer.getData("text");
-  let data = document.getElementById(dataName).cloneNode(true);
-  let player = data.firstElementChild.nextElementSibling;
-
-  // Leave only the audio and its info
-  player.removeChild(player.firstElementChild);
-  player.removeChild(player.lastElementChild);
-
-  // New styling
-  data.style.opacity = "";
-  data.classList.add("li-new-style");
-  player.classList.add("sound_info-new-style");
-
-  // Add sound to the track
-  if (el.classList.contains("editor_track")) {
-    if (refNode != undefined && el.contains(refNode)) {
-      el.insertBefore(data, refNode);
+    if (refNode != undefined && e.currentTarget.contains(refNode)) {
+      e.currentTarget.insertBefore(draggedData, refNode);
     } else {
-      el.appendChild(data);
+      e.currentTarget.appendChild(draggedData);
     }
   }
 
-  el.style.backgroundColor = "";
-  el.style.borderLeft = "";
-  el.style.borderRight = "";
 }
