@@ -6,23 +6,25 @@ let backBtn = document.getElementsByClassName("back_btn");
 let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
 let search = document.getElementsByName("sound_search-bar")[0];
+
+let tracks = document.getElementsByClassName("editor_track");
+let isDone = [true, true, true]; // Whether each track is done playing audio
+let currentAudioPlaying = []; // Currently playing audio on each of the tracks
+
+// Keeps track of audio
+let isPlaying = false;
+let isPaused = false;
+let isStopped = false;
+
+let editorControlBtns = document.getElementsByClassName("editor_controls-container")[0].querySelectorAll("button");
+let playTrackBtn = editorControlBtns[0];
+let pauseTrackBtn = editorControlBtns[1];
+let stopTrackBtn = editorControlBtns[2];
+
 let soundOnTrack = 0; // Number of sounds that have ever been on the track
 let refNode;
 
 /* ~~~~~ Loop and Functions ~~~~~ */
-
-for (let i = 0; i < headerBtns.length; i++) {
-  if (headerBtns[i].innerText.toLowerCase() === "tutorial") {
-    // Add tutorial listener
-    continue;
-  } else {
-    headerBtns[i].addEventListener("click", toggleSecondMenu);
-  }
-
-  if (i < backBtn.length) {
-    backBtn[i].addEventListener("click", toggleSecondMenu);
-  }
-}
 
 // Returns name of the second menu's container, header, and content based on given header btn
 function getSecondMenuNames(btn) {
@@ -107,7 +109,18 @@ function toggleSecondMenu() {
 
 }
 
-search.addEventListener("change", filter);
+for (let i = 0; i < headerBtns.length; i++) {
+  if (headerBtns[i].innerText.toLowerCase() === "tutorial") {
+    // Add tutorial listener
+    continue;
+  } else {
+    headerBtns[i].addEventListener("click", toggleSecondMenu);
+  }
+
+  if (i < backBtn.length) {
+    backBtn[i].addEventListener("click", toggleSecondMenu);
+  }
+}
 
 // Filters through the currently displayed list of sounds based on user input
 function filter() {
@@ -125,10 +138,7 @@ function filter() {
 
 }
 
-for (let i = 0; i < playBtns.length; i++) {
-  playBtns[i].addEventListener("click", handleSound);
-  addTimeStamp(soundTime[i], playBtns[i]);
-}
+search.addEventListener("change", filter);
 
 function getAudioElement(btn){
   let audioName = btn.nextElementSibling.children;
@@ -137,7 +147,7 @@ function getAudioElement(btn){
   return audio;
 }
 
-// returns a leading zero if the given number is less than 10
+// Returns a leading zero if the given number is less than 10
 function pad(num) {
   if (num < 10) {
     return "0" + num;
@@ -146,7 +156,7 @@ function pad(num) {
   }
 }
 
-// Handles play button
+// Handles play buttons on the second menu
 function handleSound() {
   let audio = getAudioElement(this);
   let btn = this;
@@ -173,7 +183,12 @@ function addTimeStamp(timeStamp, btn) {
   timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
 }
 
-// sound_list Items: drag and drop handlers
+for (let i = 0; i < playBtns.length; i++) {
+  playBtns[i].addEventListener("click", handleSound);
+  addTimeStamp(soundTime[i], playBtns[i]);
+}
+
+/* ~~~~~ sound_list Items: drag and drop handlers ~~~~~ */
 
 function onDragStart(e){
   e.currentTarget.style.opacity = 0.5;
@@ -185,8 +200,7 @@ function onDragEnd(e) {
   e.currentTarget.style = "";
 }
 
-
-// Sound Nodes: drag and drop handlers
+/* ~~~~~ Sound Nodes: drag and drop handlers ~~~~~ */
 
 // Returns true if mouse is more towards the left of the element than the right
 function isLeft(e) {
@@ -223,7 +237,7 @@ function onSoundInfoDragLeave(e){
   e.currentTarget.style = "";
 }
 
-// Tracks: drag and drop handlers
+/* ~~~~~ Tracks: drag and drop handlers ~~~~~ */
 
 function onDragOver(e){
   e.preventDefault();
@@ -238,6 +252,10 @@ function onDragLeave(e){
 function onDrop(e) {
   e.preventDefault();
   e.currentTarget.style = "";
+
+  // Check if drag and drop is currently allowed
+  let currentState = getTrackAudioState();
+  if((currentState === 1) || (currentState === 2) || (currentState === 3)){ return;}
 
   let draggedData;
 
@@ -256,6 +274,8 @@ function onDrop(e) {
     draggedData.addEventListener("dragstart", function(event){ onSoundInfoDragStart(event); }, false);
     draggedData.addEventListener("dragover", function(event){ onSoundInfoDragOver(event); }, false);
     draggedData.addEventListener("dragleave", function(event){ onSoundInfoDragLeave(event); }, false);
+
+    draggedData.querySelector("audio").addEventListener("ended", next);
 
     soundOnTrack += 1;
     draggedData.id = "sound_on-track-" + soundOnTrack;
@@ -278,3 +298,137 @@ function onDrop(e) {
   }
 
 }
+
+/* ~~~~~ Editor Control Functions ~~~~~ */
+
+function getTrackAudioState(){
+
+  // State 0: Startup
+  if(!isPlaying && !isPaused && !isStopped){ return 0;}
+
+  // State 1: Audio is currently playing
+  if(isPlaying && !isPaused && !isStopped){ return 1;}
+
+  // State 2: Audio is paused
+  if(isPlaying && isPaused && !isStopped) { return 2;}
+
+  // State 3: Audio is stopped
+  //if(isPlaying && (!isPaused || isPaused) && isStopped){ return 3;}
+
+  // State 4: All audio is done playing
+  if(!isPlaying && !isPaused && isStopped){ return 4;}
+
+  // Error
+  return -1;
+}
+
+function next() {
+
+  let nextAudio = this.parentNode.nextElementSibling; // Currently at next audio's parent node (LI Element)
+  let currentTrack = this.parentNode.parentNode; // DIV Element
+
+  // Either play next audio or set that track to done
+  switch (currentTrack) {
+    case tracks[0]:
+      if (nextAudio != undefined) {
+        currentAudioPlaying[0] = nextAudio.firstElementChild;
+        currentAudioPlaying[0].play();
+      } else {
+        isDone[0] = true;
+        currentAudioPlaying[0] = undefined;
+      }
+      break;
+    case tracks[1]:
+      if (nextAudio != undefined) {
+        currentAudioPlaying[1] = nextAudio.firstElementChild;
+        currentAudioPlaying[1].play();
+      } else {
+        isDone[1] = true;
+        currentAudioPlaying[1] = undefined;
+      }
+      break;
+    default:
+      if (nextAudio != undefined) {
+        currentAudioPlaying[2] = nextAudio.firstElementChild;
+        currentAudioPlaying[2].play();
+      } else {
+        isDone[2] = true;
+        currentAudioPlaying[2] = undefined;
+      }
+      break;
+  }
+
+  // Check if everything is done playing
+  if ((isDone[0] === true) && (isDone[1] === true) && (isDone[2] === true)) {
+    isPlaying = false;
+    isPaused = false;
+    isStopped = true;
+  }
+
+}
+
+function playSoundsOnTrack() {
+
+  switch (getTrackAudioState()) {
+    case 0:
+    case 4: // Play from the beginning
+      for (let i = 0; i < tracks.length; i++) {
+        currentAudioPlaying[i] = tracks[i].querySelectorAll("audio ")[0];
+        if (currentAudioPlaying[i] != undefined) {
+          currentAudioPlaying[i].play();
+          isDone[i] = false;
+        }
+      }
+      break;
+    case 2: // Unpause
+      for (let i = 0; i < currentAudioPlaying.length; i++) {
+        if (currentAudioPlaying[i] != undefined) {
+          currentAudioPlaying[i].play();
+        }
+      }
+      isPaused = false;
+      break;
+    default: // Do nothing
+      return;
+  }
+
+  isPlaying = true;
+  isStopped = false;
+}
+
+function pauseSoundsOnTrack(){
+
+  if (getTrackAudioState() === 1) {
+    for (let i = 0; i < currentAudioPlaying.length; i++) {
+      if (currentAudioPlaying[i] != undefined) {
+        currentAudioPlaying[i].pause();
+      }
+    }
+    isPaused = true;
+  }
+
+}
+
+function stopSoundsOnTrack(){
+
+  let currentState = getTrackAudioState();
+
+  // Stop currently playing/paused audio
+  if ((currentState === 1) || (currentState === 2)) {
+    for (let i = 0; i < currentAudioPlaying.length; i++) {
+      if (currentAudioPlaying[i] != undefined) {
+        currentAudioPlaying[i].pause();
+        currentAudioPlaying[i].currentTime = 0;
+        isDone[i] = true;
+      }
+    }
+    isPlaying = false;
+    isPaused = false;
+    isStopped = true;
+  }
+
+}
+
+playTrackBtn.addEventListener("click", playSoundsOnTrack);
+pauseTrackBtn.addEventListener("click", function(){ pauseSoundsOnTrack(); });
+stopTrackBtn.addEventListener("click", function(){ stopSoundsOnTrack(); });
