@@ -21,6 +21,7 @@ let playTrackBtn = editorControlBtns[0];
 let pauseTrackBtn = editorControlBtns[1];
 let stopTrackBtn = editorControlBtns[2];
 
+let trashSound = document.getElementsByClassName("editor_sound-trash-container")[0];
 let soundOnTrack = 0; // Number of sounds that have ever been on the track
 let refNode;
 
@@ -198,6 +199,7 @@ function onDragStart(e){
 
 function onDragEnd(e) {
   e.currentTarget.style = "";
+  trashSound.classList.add("hide");
 }
 
 /* ~~~~~ Sound Nodes: drag and drop handlers ~~~~~ */
@@ -220,6 +222,8 @@ function onSoundInfoDragStart(e){
   e.currentTarget.style.opacity = 0.5;
   e.dataTransfer.setData("text", e.currentTarget.id);
   e.dataTransfer.effectAllowed = "move";
+
+  trashSound.classList.remove("hide");
 }
 
 function onSoundInfoDragOver(e){
@@ -231,10 +235,6 @@ function onSoundInfoDragOver(e){
     e.currentTarget.style.borderRight = "1px solid #eee";
     refNode = e.currentTarget.nextElementSibling;
   }
-}
-
-function onSoundInfoDragLeave(e){
-  e.currentTarget.style = "";
 }
 
 /* ~~~~~ Tracks: drag and drop handlers ~~~~~ */
@@ -252,6 +252,7 @@ function onDragLeave(e){
 function onDrop(e) {
   e.preventDefault();
   e.currentTarget.style = "";
+  trashSound.classList.add("hide");
 
   // Check if drag and drop is currently allowed
   let currentState = getTrackAudioState();
@@ -273,7 +274,7 @@ function onDrop(e) {
 
     draggedData.addEventListener("dragstart", function(event){ onSoundInfoDragStart(event); }, false);
     draggedData.addEventListener("dragover", function(event){ onSoundInfoDragOver(event); }, false);
-    draggedData.addEventListener("dragleave", function(event){ onSoundInfoDragLeave(event); }, false);
+    draggedData.addEventListener("dragleave", function(event){ onDragLeave(event); }, false);
 
     draggedData.querySelector("audio").addEventListener("ended", next);
 
@@ -297,6 +298,39 @@ function onDrop(e) {
     }
   }
 
+}
+
+/* ~~~~~ Trash: drag and drop handlers ~~~~~ */
+
+function onTrashDragOver(e){
+  e.preventDefault();
+  e.currentTarget.style.backgroundColor = "red";
+  e.currentTarget.style.color = "#f7f7f7";
+}
+
+function onTrashDrop(e) {
+  e.preventDefault();
+
+  // Check if drag and drop is currently allowed
+  let currentState = getTrackAudioState();
+  if ((currentState === 1) || (currentState === 2) || (currentState === 3)) {
+    return;
+  }
+
+  if (e.dataTransfer.dropEffect === "move") {
+    let draggedData = document.getElementById(e.dataTransfer.getData("text"));
+
+    if (tracks[0].contains(draggedData)) {
+      tracks[0].removeChild(draggedData);
+    } else if (tracks[1].contains(draggedData)) {
+      tracks[1].removeChild(draggedData);
+    } else {
+      tracks[2].removeChild(draggedData);
+    }
+  }
+
+  e.currentTarget.style = "";
+  trashSound.classList.add("hide");
 }
 
 /* ~~~~~ Editor Control Functions ~~~~~ */
