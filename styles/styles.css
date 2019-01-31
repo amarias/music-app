@@ -7,7 +7,10 @@
 
   == Modules
     - Headers
-    - Sections
+    - Section
+      ~ Tracks
+      ~ Library
+      ~ Animation
     - Buttons
 
   == States
@@ -94,10 +97,12 @@ button {
   justify-content: center;
   align-items: center;
 
-  height: 10vh;
+  height: 15%;
+
+  border-bottom: #45B294 solid 0.3rem;
 }
 
-/* ~~~~~ Sections ~~~~~ */
+/* ~~~~~ Section: Tracks ~~~~~ */
 
 .tracks, .library, .animation {
   background-color: #333;
@@ -112,12 +117,46 @@ button {
   grid-row-end: 4;
 }
 
+.tracks__mute-menu {
+  display: grid;
+  grid-template-rows: (3, 1fr);
+
+  float: left;
+
+  background-color: #555;
+  width: 15%;
+  height: 85%;
+}
+
+.track-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-bottom: #222 solid 0.2rem;
+}
+
+.tracks__grid-container {
+  display: grid;
+  background-color: #aaa;
+
+  width: 85%;
+  height: 85%;
+
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+/* ~~~~~ Section: Library ~~~~~ */
+
 .library {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 5;
   grid-row-end: 6;
 }
+
+/* ~~~~~ Section: Animation ~~~~~ */
 
 .animation {
   grid-column-start: 4;
@@ -137,6 +176,7 @@ button {
   border-radius: 100%;
   border: 0;
 }
+
 
 
 /* ================== */
