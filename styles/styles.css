@@ -63,7 +63,9 @@ button {
 /* ~~~~~ Headers ~~~~~ */
 
 .main-header {
-
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 .main-header__help-btn {
@@ -71,276 +73,20 @@ button {
   border-radius: 100%;
 }
 
-/* ~~~~~ Menu Classes ~~~~~ */
 
-.sound_container, .settings_container, .contact_container {
-  display: none;
-  width: 20vw;
-  height: 100%;
-  overflow-y: auto;
-  background-image: linear-gradient(#242424, #333);
+
+/* ================== */
+/* ===== States ===== */
+/* ================== */
+
+/* ~~~~~ Classes ~~~~~ */
+
+.is-hidden {
+  display: none !important;
 }
 
-.sound_header, .settings_header, .contact_header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  width: inherit;
-  height: 10vh;
-  background-color: #242424;
-  border-bottom: 1px solid #B0B0B0;
-}
+/* ~~~~~ Pseudo Classes ~~~~~ */
 
-.settings_header, .contact_header {
-  justify-content: flex-start;
-}
 
-.sound_list, .settings_content, .contact_content {
-  margin-top: 10vh;
-}
 
-.sound_list {
-  display: none;
-}
-
-.sound_player {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 1rem 3rem;
-  text-indent: 2rem;
-}
-
-.sound_play-btn {
-  background-color: #eee;
-  color: #242424;
-}
-
-.sound_info {
-  width: 100%;
-}
-
-.sound_time {
-  margin: auto;
-}
-
-/* ~~~~~ Music Editor Classes ~~~~~ */
-
-.editor_colors {
-  display: none;
-  position: fixed;
-  width: 80vw;
-  height: 60vh;
-  z-index: -1;
-  background-color: blue;
-}
-
-.editor_container {
-  display: flex;
-  flex-direction: column;
-  width: 60vw;
-  max-height: 40vh;
-  min-height: 30vh;
-  margin: auto;
-}
-
-.editor_controls-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #242424;
-  border-radius: 1rem 1rem 0 0;
-  border-bottom: 0.5rem solid #45B294;
-  box-sizing: border-box;
-  width: 100%;
-  height: 10vh;
-}
-
-.editor_bottom-container {
-  display: flex;
-  align-items: center;
-  height: 30vh;
-}
-
-.editor_track-settings {
-  display: flex;
-  flex-direction: column;
-  background-color: #333;
-  background-image: linear-gradient(#242424, #303030);
-  font-weight: bold;
-}
-
-.editor_track-container {
-  width: 100%;
-  opacity: 0.7;
-  height: inherit;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-.editor_track {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  background-color: #333;
-  height: 10vh;
-  border-bottom: 1px solid white;
-  overflow-y: hidden;
-  overflow-x: visible;
-}
-
-.editor_sound-trash-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  background-color: #eee;
-  color: red;
-  opacity: 0.4;
-  padding: 2rem;
-  width: 100%;
-  height: 7vh;
-}
-
-.li-on-track {
-  list-style-type: none;
-  border: 0;
-}
-
-.sound_info-on-track {
-  background-color: #45B294;
-  color: #242424;
-  width: 5vw;
-  height: 8vh;
-  padding: 0;
-  text-align: center;
-  text-indent: 0;
-}
-
-/* ~~~~~ Modal Classes ~~~~~ */
-
-.modal {
-  display: none;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-.modal_container {
-  width: 100%;
-  height: 100%;
-  font-size: 2rem;
-}
-
-.close {
-  position: fixed;
-  color: #242424;
-  font-size: 4rem;
-  right: 0;
-  text-align: center;
-}
-
-/* ~~~~~ Header: Higher Specificity ~~~~~ */
-
-.header_container button {
-  width: 100%;
-  padding: 0.5rem 2.5rem;
-}
-
-.header_container button:hover {
-  text-indent: 1rem;
-}
-
-/* ~~~~~ Menus: Higher Specificity ~~~~~ */
-
-.sound_header button {
-  position: absolute;
-}
-
-.sound_header button, .settings_header button, .contact_header button {
-  background-color: inherit;
-  color: #45B294;
-  font-weight: bold;
-  font-size: 2.5rem;
-  left: 0;
-}
-
-.sound_header input {
-  width: 15vw;
-  border: none;
-  text-indent: 1rem;
-  border-radius: 1rem;
-}
-
-.settings_header h2, .contact_header h2 {
-  color: #B0B0B0;
-}
-
-.settings_content div {
-  border: 1px solid #B0B0B0;
-  box-sizing: border-box;
-  margin: 0 4.5rem 0 4.5rem;
-  background-color: #242424;
-}
-
-.settings_content h2 {
-  padding: 4rem 4.5rem 2rem 4.5rem;
-}
-
-.settings_content span {
-  justify-content: space-between;
-  padding: 1rem;
-}
-
-.settings_language select {
-  width: 100%;
-}
-
-/* ~~~~~ Editor: Higher Specificity ~~~~~ */
-
-.editor_controls-container button {
-  margin: 0 1rem;
-  background-color: white;
-}
-
-.editor_track-settings button {
-  background-color: grey;
-  width: 1.5vw;
-  height: 2.5vh;
-}
-
-.editor_track-settings span {
-  width: 10vw;
-  height: 10vh;
-}
-
-/* ~~~~~ Modals: Higher Specificity ~~~~~ */
-
-.modal_container span {
-  position: fixed;
-  border: 0;
-  right: 0;
-  bottom: 0;
-  margin: 3rem;
-  margin-right: 4rem;
-}
-
-.modal_container span button {
-  font-size: 2rem;
-}
-
-.modal_container button:hover {
-  color: #45b294;
-}
-
-/* ~~~~~~~~~~ */
-
-.active {
-  display: block;
-}
-
-.hide {
-  display: none;
-}
+/* ~~~~~ Media Queries ~~~~~ */
