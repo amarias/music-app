@@ -1,4 +1,25 @@
-/* ~~~~~ Tags ~~~~~ */
+/*=====================
+    Table of Contents
+  =====================/*
+
+
+  == Tags
+
+  == Modules
+    -
+
+  == States
+    - Classes
+    - Pseudo Classes
+    - Media Queries
+
+  == Animations
+
+
+
+/* ================ */
+/* ===== Tags ===== */
+/* ================ */
 
 html {
   font-size: 62.5%;
@@ -218,11 +239,10 @@ select {
   box-sizing: border-box;
   background-color: #eee;
   color: red;
-  opacity: 0.3;
+  opacity: 0.4;
   padding: 2rem;
   width: 100%;
   height: 7vh;
-  margin-top: auto;
 }
 
 .li-on-track {
