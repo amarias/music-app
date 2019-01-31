@@ -21,15 +21,38 @@
 <body>
 
   <!-- Header -->
-<header class="header">
+<header class="main-header">
 
-  <h1 class="header__logo">Music Web App</h1>
+  <h1 class="main-header__logo">Music Web App</h1>
 
-  <button class="header__help-btn">?</button>
+  <button class="main-header__help-btn">?</button>
 
 </header>
 
 
+
+  <!-- Music Tracks -->
+  <div class="tracks">
+    <header class="tracks__header">
+      <button class="skip-to-start-btn">Skip to start</button>
+      <button class="tracks__play-btn">Play</button>
+      <button class="pause-btn">Pause</button>
+    </header>
+
+    <div class="tracks__grid-container">
+      <div class="track-menu track-1">
+        <button>Mute</button>
+      </div>
+
+      <div class="track-menu track-2">
+      <button>Mute</button>
+      </div>
+
+      <div class="track-menu track-3">
+      <button>Mute</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Sound Menu -->
   <div>
@@ -133,56 +156,6 @@
 
     </div>
   </div>
-
-
-
-  <!-- Music Editor -->
-  <main>
-
-    <div class="editor_colors"></div>
-
-    <div class="editor_container">
-
-      <div class="editor_controls-container">
-        <button>Play</button>
-        <button>Pause</button>
-        <button>Stop</button>
-      </div>
-
-      <div class="editor_bottom-container">
-        <div class="editor_track-settings">
-          <span>
-              <label>Track 1</label>
-              <button>Mute</button>
-            </span>
-
-          <span>
-              <label>Track 2</label>
-              <button>Mute</button>
-            </span>
-
-          <span>
-              <label>Track 3</label>
-              <button>Mute</button>
-            </span>
-        </div>
-        <div class="editor_track-container">
-          <div class="editor_track" ondrop="onDrop(event);" ondragover="onDragOver(event);" ondragleave="onDragLeave(event);"></div>
-          <div class="editor_track" ondrop="onDrop(event);" ondragover="onDragOver(event);" ondragleave="onDragLeave(event);"></div>
-          <div class="editor_track" ondrop="onDrop(event);" ondragover="onDragOver(event);" ondragleave="onDragLeave(event);"></div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="editor_sound-trash-container hide" ondrop="onTrashDrop(event);" ondragover="onTrashDragOver(event);" ondragleave="onDragLeave(event);">
-      <!--<img src="" alt="Picture of trash can">-->
-      Remove Sound
-    </div>
-
-  </main>
-
-
 
 
   <!-- JS Scripts -->
