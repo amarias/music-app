@@ -7,6 +7,7 @@
 
   == Modules
     - Headers
+    - Sections
 
   == States
     - Classes
@@ -26,8 +27,16 @@ html {
 }
 
 body {
+  display: grid;
+  grid-template-columns: 5vw 1fr 3vw 1fr 5vw;
+  grid-template-rows: 5vh 5vh 2fr 5vh 1fr 5vh;
+
   background-color: #222;
   color: #B0B0B0;
+
+  width: 100vw;
+  height: 100vh;
+
   font-size: 1.6rem;
   font-family: sans-serif;
 }
@@ -65,12 +74,56 @@ button {
 .main-header {
   display: flex;
   justify-content: space-between;
+
+  grid-column-start: 1;
+  grid-column-end: 6;
+  grid-row-start: 1;
+  grid-row-end: 2;
+
   padding: 1rem 2rem;
 }
 
 .main-header__help-btn {
   border: 0.1rem solid #B0B0B0;
   border-radius: 100%;
+}
+
+.tracks__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 10vh;
+}
+
+/* ~~~~~ Sections ~~~~~ */
+
+.tracks, .library, .animation {
+  background-color: #333;
+}
+
+.tracks {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  grid-row-start: 3;
+  grid-row-end: 4;
+
+  border-top-left-radius: 3rem;
+  border-top-right-radius: 3rem;
+}
+
+.library {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 5;
+  grid-row-end: 6;
+}
+
+.animation {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 5;
+  grid-row-end: 6;
 }
 
 
