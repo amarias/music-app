@@ -21,18 +21,18 @@
 <body>
 
   <!-- Header -->
-<header class="main-header">
+  <header class="main-header">
 
-  <h1 class="main-header__logo">Music Web App</h1>
+    <h1 class="main-header__logo">Music Web App</h1>
 
-  <button class="main-header__help-btn">?</button>
+    <button class="main-header__help-btn">?</button>
 
-</header>
+  </header>
 
 
 
   <!-- Music Tracks -->
-  <div class="tracks">
+  <section class="tracks">
     <header class="tracks__header">
       <button class="skip-to-start-btn">Skip to start</button>
       <button class="tracks__play-btn">Play</button>
@@ -45,117 +45,100 @@
       </div>
 
       <div class="track-menu track-2">
-      <button>Mute</button>
+        <button>Mute</button>
       </div>
 
       <div class="track-menu track-3">
-      <button>Mute</button>
+        <button>Mute</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Sound Menu -->
-  <div>
-    <div class="sound_container">
 
-      <div class="sound_header">
-        <button class="back_btn">&larr;</button>
-        <input name="sound_search-bar" type="text" placeholder="Search">
-      </div>
 
-      <div class="sound_list guitar">
-        <ul>
-          <li>Guitar 1</li>
-          <li>Guitar 2</li>
-        </ul>
-      </div>
+  <!-- Sound Library -->
+  <section class="library">
 
-      <div class="sound_list piano">
-        <ul>
+    <header class="library__header">
+      <h2>Instruments</h2>
+      <input class="is-hidden" name="sound_search-bar" type="text" placeholder="Search">
+    </header>
 
-          <li id="piano_1" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
-            <audio id="test" preload="metadata">
-              <source src="sounds/test.mp3" type="audio/mpeg"/>
-            </audio>
-            <div class="sound_player">
-              <button class="sound_play-btn">Play</button>
-              <div class="sound_info">
-                <h3>Test</h3>
-                <h4>Me</h4>
-              </div>
-              <div class="sound_time"></div>
-            </div>
-          </li>
+    <div class="instruments">
+      <button class="left-arrow">
+        <</button> <div class="instruments__guitar">
+          <img class="instrument-icon" src="" alt="" />
+          <h3>Guitar</h3>
+    </div>
 
-          <li id="piano_2" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
-            <audio id="test2" preload="metadata">
-              <source src="sounds/test2.mp3" type="audio/mpeg"/>
-            </audio>
-            <div class="sound_player">
-              <button class="sound_play-btn">Play</button>
-              <div class="sound_info">
-                <h3>Test2</h3>
-                <h4>Me</h4>
-              </div>
-              <div class="sound_time"></div>
-            </div>
-          </li>
+    <div class="instruments__piano">
+      <img class="instrument-icon" src="" alt="" />
+      <h3>Piano</h3>
+    </div>
 
-        </ul>
-      </div>
+    <div class="instruments__bass">
+      <img class="instrument-icon" src="" alt="" />
+      <h3>Bass</h3>
+    </div>
 
-      <div class="sound_list bass">
-        <ul>
-          <li>Bass 1</li>
-        </ul>
-      </div>
+    <div class="instruments__percussion">
+      <img class="instrument-icon" src="" alt="" />
+      <h3>Percussion</h3>
+    </div>
 
-      <div class="sound_list percussion">
-        <ul>
-          <li>Percussion 1</li>
-        </ul>
-      </div>
+    <div class="instruments__brass">
+      <img class="instrument-icon" src="" alt="" />
+      <h3>Brass</h3>
+    </div>
 
-      <div class="sound_list strings">
-        <ul>
-          <li>Strings 1</li>
-        </ul>
-      </div>
+    <div class="instruments__sounds">
+      <img class="instrument-icon" src="" alt="" />
+      <h3>Sounds</h3>
+    </div>
 
-      <div class="sound_list brass">
-        <ul>
-          <li>Brass 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list woodwind">
-        <ul>
-          <li>Woodwind 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list voice">
-        <ul>
-          <li>Voice 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list sounds">
-        <ul>
-          <li>Sounds 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list snippets">
-        <ul>
-          <li>Snippets 1</li>
-        </ul>
-      </div>
-
-      <div class="sound_list all"></div>
+    <button class="right-arrow">></button>
 
     </div>
-  </div>
+
+
+
+    <div class="sounds is-hidden">
+
+      <!-- Old Code -->
+
+      <!--      <li id="piano_1" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+        <audio id="test" preload="metadata">
+          <source src="sounds/test.mp3" type="audio/mpeg"/>
+        </audio>
+        <div class="sound_player">
+          <button class="sound_play-btn">Play</button>
+          <div class="sound_info">
+            <h3>Test</h3>
+            <h4>Me</h4>
+          </div>
+          <div class="sound_time"></div>
+        </div>
+      </li>
+
+      <li id="piano_2" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+        <audio id="test2" preload="metadata">
+          <source src="sounds/test2.mp3" type="audio/mpeg"/>
+        </audio>
+        <div class="sound_player">
+          <button class="sound_play-btn">Play</button>
+          <div class="sound_info">
+            <h3>Test2</h3>
+            <h4>Me</h4>
+          </div>
+          <div class="sound_time"></div>
+        </div>
+      </li> -->
+    </div>
+
+
+
+  </section>
+
 
 
   <!-- JS Scripts -->
