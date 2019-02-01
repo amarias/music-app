@@ -67,6 +67,10 @@ button {
   font-weight: normal;
 }
 
+img {
+  object-fit: cover;
+  object-position: center;
+}
 
 
 /* =================== */
@@ -92,7 +96,7 @@ button {
   border-radius: 100%;
 }
 
-.tracks__header {
+.tracks__header, .library__header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,6 +158,26 @@ button {
   grid-column-end: 3;
   grid-row-start: 5;
   grid-row-end: 6;
+
+  border-radius: 2rem;
+}
+
+.instruments-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  height: 85%;
+}
+
+.instruments {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 75%;
+
+  overflow: hidden;
 }
 
 /* ~~~~~ Section: Animation ~~~~~ */
@@ -163,6 +187,8 @@ button {
   grid-column-end: 5;
   grid-row-start: 5;
   grid-row-end: 6;
+
+  border-radius: 2rem;
 }
 
 /* ~~~~~ Buttons ~~~~~ */
@@ -175,6 +201,8 @@ button {
 
   border-radius: 100%;
   border: 0;
+
+  margin-bottom: 2vh;
 }
 
 
