@@ -32,7 +32,7 @@ html {
 
 body {
   display: grid;
-  grid-template-columns: 5vw 1fr 3vw 1fr 5vw;
+  grid-template-columns: 5vw minmax(50vw, 1fr) 3vw 1fr 5vw;
   grid-template-rows: 5vh 5vh 2fr 5vh 1fr 5vh;
 
   background-color: #222;
@@ -43,6 +43,8 @@ body {
 
   font-size: 1.6rem;
   font-family: sans-serif;
+
+  overflow: hidden;
 }
 
 h1 {
@@ -50,7 +52,7 @@ h1 {
 }
 
 h2 {
-  color: #45B294;
+  color: inherit;
   font-size: 2.2rem;
   font-weight: bold;
 }
@@ -68,7 +70,7 @@ button {
 }
 
 img {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -172,13 +174,32 @@ img {
 }
 
 .instruments {
-  display: flex;
+  /*display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center;*/
+
+  display: grid;
+  grid-template-columns: repeat(6, minmax(25%, 1fr));
+  grid-column-gap: 10%;
 
   width: 75%;
+  height: 80%;
 
   overflow: hidden;
+}
+
+.instrument-icon {
+  background-color: #eee;
+  text-align: center;
+
+  height: inherit;
+
+  box-sizing: border-box;
+}
+
+.instrument-img {
+  width: 6vw;
+  height: inherit;
 }
 
 /* ~~~~~ Section: Animation ~~~~~ */
