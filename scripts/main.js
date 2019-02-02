@@ -7,6 +7,18 @@
 
 let tracksGridContainer = document.getElementsByClassName("tracks__grid-container")[0];
 
+let instrumentsIndex = 0;
+let instrumentGridCols = 3;
+let instruments = document.getElementsByClassName("instruments")[0];
+let instrumentIcons = document.getElementsByClassName("instrument-icon");
+let arrows = document.getElementsByClassName("arrow");
+
+
+/* ===== Event Listeners ===== */
+
+  arrows[0].addEventListener("click", showLeftInstruments);
+  arrows[1].addEventListener("click", showRightInstruments);
+
 
 
 /* ===== Initialize Page ===== */
@@ -25,6 +37,7 @@ function setTracksGridContainer() {
 
   for (let i = 0; i < columns; i++) {
     for (let j = 0; j < rows; j++) {
+
       let trackEmptySpace = document.createElement("div");
       trackEmptySpace.classList.add("track-empty-space");
 
@@ -32,6 +45,36 @@ function setTracksGridContainer() {
     }
   }
 }
+
+// Left Arrow = 0; Right Arrow = 1
+function showLeftInstruments(){
+  if (instrumentsIndex === 0) {
+    return;
+  }
+
+  instrumentIcons[instrumentsIndex + (instrumentGridCols - 1)].classList.add("is-hidden");
+  instrumentIcons[--instrumentsIndex].classList.remove("is-hidden");
+
+  arrows[1].classList.remove("arrow--is-disabled");
+  if (instrumentsIndex === 0) {
+    arrows[0].classList.add("arrow--is-disabled");
+  }
+}
+
+function showRightInstruments(){
+  if (instrumentsIndex === (instrumentIcons.length - instrumentGridCols)) {
+    return;
+  }
+
+  instrumentIcons[instrumentsIndex++].classList.add("is-hidden");
+  instrumentIcons[instrumentsIndex + (instrumentGridCols - 1)].classList.remove("is-hidden");
+
+  arrows[0].classList.remove("arrow--is-disabled");
+  if (instrumentsIndex == (instrumentIcons.length - instrumentGridCols)) {
+    arrows[1].classList.add("arrow--is-disabled");
+  }
+}
+
 
 
 

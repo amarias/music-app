@@ -183,12 +183,14 @@ img {
 
 .instruments {
   display: grid;
-  grid-template-columns: repeat(6, minmax(25%, 1fr));
+  grid-template-columns: repeat(3, 25%);
+  grid-auto-flow: column;
   grid-column-gap: 10%;
 
   width: 75%;
   height: 80%;
 
+  transition: margin 0.5s;
   overflow: hidden;
 }
 
@@ -196,9 +198,10 @@ img {
   background-color: #eee;
   text-align: center;
 
+  box-sizing: border-box;
   height: inherit;
 
-  box-sizing: border-box;
+  animation: fadeIn 1s;
 }
 
 .instrument-img {
@@ -224,6 +227,7 @@ img {
 
 .arrow {
   background-color: #45B294;
+  color: #333;
 
   font-size: 2.5rem;
   font-weight: bold;
@@ -242,6 +246,10 @@ img {
 
 /* ~~~~~ Classes ~~~~~ */
 
+.arrow--is-disabled {
+  opacity: 0.3;
+}
+
 .is-hidden {
   display: none !important;
 }
@@ -251,3 +259,15 @@ img {
 
 
 /* ~~~~~ Media Queries ~~~~~ */
+
+
+
+/* ====================== */
+/* ===== Animations ===== */
+/* ====================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+
+  to { opacity: 1; }
+}
