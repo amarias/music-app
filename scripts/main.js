@@ -1,7 +1,47 @@
+/*=====================
+         New Code
+  =====================/*
+
+
+/* ===== Global Variables ===== */
+
+let tracksGridContainer = document.getElementsByClassName("tracks__grid-container")[0];
+
+
+
+/* ===== Initialize Page ===== */
+
+setTracksGridContainer();
+
+
+
+/* ===== Functions ===== */
+
+function setTracksGridContainer() {
+
+  // Based on the columns and rows of tracks__grid-container
+  let columns = 12;
+  let rows = 3;
+
+  for (let i = 0; i < columns; i++) {
+    for (let j = 0; j < rows; j++) {
+      let trackEmptySpace = document.createElement("div");
+      trackEmptySpace.classList.add("track-empty-space");
+
+      tracksGridContainer.appendChild(trackEmptySpace);
+    }
+  }
+}
+
+
+
+/*=====================
+         Old Code
+  =====================/*
 
 /* ~~~~~ Global Variables ~~~~~ */
 
-let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
+/*let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
 let backBtn = document.getElementsByClassName("back_btn");
 let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
@@ -23,12 +63,12 @@ let stopTrackBtn = editorControlBtns[2];
 
 let trashSound = document.getElementsByClassName("editor_sound-trash-container")[0];
 let soundOnTrack = 0; // Number of sounds that have ever been on the track
-let refNode;
+let refNode;*/
 
 /* ~~~~~ Loop and Functions ~~~~~ */
 
 // Returns name of the second menu's container, header, and content based on given header btn
-function getSecondMenuNames(btn) {
+/*function getSecondMenuNames(btn) {
 
   let container;
   let header;
@@ -187,11 +227,11 @@ function addTimeStamp(timeStamp, btn) {
 for (let i = 0; i < playBtns.length; i++) {
   playBtns[i].addEventListener("click", handleSound);
   addTimeStamp(soundTime[i], playBtns[i]);
-}
+}*/
 
 /* ~~~~~ sound_list Items: drag and drop handlers ~~~~~ */
 
-function onDragStart(e){
+/*function onDragStart(e){
   e.currentTarget.style.opacity = 0.5;
   e.dataTransfer.setData("text", e.currentTarget.id);
   e.dataTransfer.effectAllowed = "copy";
@@ -200,12 +240,12 @@ function onDragStart(e){
 function onDragEnd(e) {
   e.currentTarget.style = "";
   trashSound.classList.add("hide");
-}
+}*/
 
 /* ~~~~~ Sound Nodes: drag and drop handlers ~~~~~ */
 
 // Returns true if mouse is more towards the left of the element than the right
-function isLeft(e) {
+/*function isLeft(e) {
 
   let third = e.currentTarget.offsetWidth / 3;
 
@@ -235,11 +275,11 @@ function onSoundInfoDragOver(e){
     e.currentTarget.style.borderRight = "1px solid #eee";
     refNode = e.currentTarget.nextElementSibling;
   }
-}
+}*/
 
 /* ~~~~~ Tracks: drag and drop handlers ~~~~~ */
 
-function onDragOver(e){
+/*function onDragOver(e){
   e.preventDefault();
   e.currentTarget.style.backgroundColor = "inherit";
   e.dataTransfer.dropEffect = "copyMove";
@@ -298,11 +338,11 @@ function onDrop(e) {
     }
   }
 
-}
+}*/
 
 /* ~~~~~ Trash: drag and drop handlers ~~~~~ */
 
-function onTrashDragOver(e){
+/*function onTrashDragOver(e){
   e.preventDefault();
   e.currentTarget.style.backgroundColor = "red";
   e.currentTarget.style.color = "#f7f7f7";
@@ -331,11 +371,11 @@ function onTrashDrop(e) {
 
   e.currentTarget.style = "";
   trashSound.classList.add("hide");
-}
+}*/
 
 /* ~~~~~ Editor Control Functions ~~~~~ */
 
-function getTrackAudioState(){
+/*function getTrackAudioState(){
 
   // State 0: Startup
   if(!isPlaying && !isPaused && !isStopped){ return 0;}
@@ -465,4 +505,4 @@ function stopSoundsOnTrack(){
 
 playTrackBtn.addEventListener("click", playSoundsOnTrack);
 pauseTrackBtn.addEventListener("click", function(){ pauseSoundsOnTrack(); });
-stopTrackBtn.addEventListener("click", function(){ stopSoundsOnTrack(); });
+stopTrackBtn.addEventListener("click", function(){ stopSoundsOnTrack(); });*/

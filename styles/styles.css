@@ -145,13 +145,21 @@ img {
 
 .tracks__grid-container {
   display: grid;
-  background-color: #222;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 1px;
+
+  background-color: #333;
 
   width: 85%;
   height: 85%;
 
   overflow-y: hidden;
   overflow-x: auto;
+}
+
+.track-empty-space {
+  background-color: #222;
 }
 
 /* ~~~~~ Section: Library ~~~~~ */
@@ -174,10 +182,6 @@ img {
 }
 
 .instruments {
-  /*display: flex;
-  justify-content: space-between;
-  align-items: center;*/
-
   display: grid;
   grid-template-columns: repeat(6, minmax(25%, 1fr));
   grid-column-gap: 10%;
