@@ -13,12 +13,18 @@ let instruments = document.getElementsByClassName("instruments")[0];
 let instrumentIcons = document.getElementsByClassName("instrument-icon");
 let arrows = document.getElementsByClassName("arrow");
 
+let instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
+let sounds = document.getElementsByClassName("sounds")[0];
+
 
 /* ===== Event Listeners ===== */
 
   arrows[0].addEventListener("click", showLeftInstruments);
   arrows[1].addEventListener("click", showRightInstruments);
 
+for(let i = 0; i < instrumentIcons.length; i++){
+  instrumentIcons[i].addEventListener("click", showSounds);
+}
 
 
 /* ===== Initialize Page ===== */
@@ -75,6 +81,17 @@ function showRightInstruments(){
   }
 }
 
+function showSounds(){
+  // New layout for the library
+  instruments.classList.add("instruments-layout");
+  instrumentsContainer.classList.add("instruments-container--is-smaller");
+
+  let libraryHeader = document.getElementsByClassName("library__header")[0];
+  arrows[0].classList.add("is-hidden");
+  libraryHeader.children[0].classList.add("is-hidden");
+  libraryHeader.children[1].classList.remove("is-hidden");
+  sounds.classList.remove("is-hidden");
+}
 
 
 

@@ -190,8 +190,11 @@ img {
   width: 75%;
   height: 80%;
 
-  transition: margin 0.5s;
   overflow: hidden;
+}
+
+.instruments-layout {
+  grid-template-columns: 1fr;
 }
 
 .instrument-icon {
@@ -207,6 +210,16 @@ img {
 .instrument-img {
   width: 6vw;
   height: inherit;
+}
+
+.sounds {
+  float: right;
+
+  background-color: pink;
+
+  width: 70%;
+  height: 80%;
+  margin-right: 1vw;
 }
 
 /* ~~~~~ Section: Animation ~~~~~ */
@@ -248,6 +261,12 @@ img {
 
 .arrow--is-disabled {
   opacity: 0.3;
+}
+
+.instruments-container--is-smaller {
+  justify-content: center;
+  float: left;
+  width: 25%;
 }
 
 .is-hidden {
