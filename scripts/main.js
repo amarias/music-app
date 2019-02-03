@@ -9,20 +9,22 @@ let tracksGridContainer = document.getElementsByClassName("tracks__grid-containe
 
 let instrumentsIndex = 0;
 let instrumentGridCols = 3;
+let instrumentsPosition = [1, 2, 3, 4, 5, 6];
 let instruments = document.getElementsByClassName("instruments")[0];
 let instrumentIcons = document.getElementsByClassName("instrument-icon");
 let arrows = document.getElementsByClassName("arrow");
 
+let libraryHeader = document.getElementsByClassName("library__header")[0];
 let instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
 let sounds = document.getElementsByClassName("sounds")[0];
 
 
 /* ===== Event Listeners ===== */
 
-  arrows[0].addEventListener("click", showLeftInstruments);
-  arrows[1].addEventListener("click", showRightInstruments);
+arrows[0].addEventListener("click", showLeftInstruments);
+arrows[1].addEventListener("click", showRightInstruments);
 
-for(let i = 0; i < instrumentIcons.length; i++){
+for (let i = 0; i < instrumentIcons.length; i++) {
   instrumentIcons[i].addEventListener("click", showSounds);
 }
 
@@ -53,46 +55,71 @@ function setTracksGridContainer() {
 }
 
 // Left Arrow = 0; Right Arrow = 1
-function showLeftInstruments(){
-  if (instrumentsIndex === 0) {
-    return;
-  }
+function showLeftInstruments() {
 
-  instrumentIcons[instrumentsIndex + (instrumentGridCols - 1)].classList.add("is-hidden");
-  instrumentIcons[--instrumentsIndex].classList.remove("is-hidden");
+  for (let i = 0; i < instrumentIcons.length; i++) {
+    if ((i + 1) != instrumentIcons.length) {
+      let temp = instrumentsPosition[i];
+      instrumentsPosition[i] = instrumentsPosition[i + 1];
+      instrumentsPosition[i + 1] = temp;
+    }
 
-  arrows[1].classList.remove("arrow--is-disabled");
-  if (instrumentsIndex === 0) {
-    arrows[0].classList.add("arrow--is-disabled");
-  }
-}
-
-function showRightInstruments(){
-  if (instrumentsIndex === (instrumentIcons.length - instrumentGridCols)) {
-    return;
-  }
-
-  instrumentIcons[instrumentsIndex++].classList.add("is-hidden");
-  instrumentIcons[instrumentsIndex + (instrumentGridCols - 1)].classList.remove("is-hidden");
-
-  arrows[0].classList.remove("arrow--is-disabled");
-  if (instrumentsIndex == (instrumentIcons.length - instrumentGridCols)) {
-    arrows[1].classList.add("arrow--is-disabled");
+    instrumentIcons[i].style.order = instrumentsPosition[i];
   }
 }
 
-function showSounds(){
-  // New layout for the library
-  instruments.classList.add("instruments-layout");
-  instrumentsContainer.classList.add("instruments-container--is-smaller");
+function showRightInstruments() {
 
-  let libraryHeader = document.getElementsByClassName("library__header")[0];
-  arrows[0].classList.add("is-hidden");
-  libraryHeader.children[0].classList.add("is-hidden");
-  libraryHeader.children[1].classList.remove("is-hidden");
-  sounds.classList.remove("is-hidden");
+  for (let i = instrumentIcons.length - 1; i >= 0; i--) {
+    if ((i - 1) != -1) {
+      let temp = instrumentsPosition[i];
+      instrumentsPosition[i] = instrumentsPosition[i - 1];
+      instrumentsPosition[i - 1] = temp;
+    }
+
+    instrumentIcons[i].style.order = instrumentsPosition[i];
+  }
 }
 
+function showSounds() {
+
+  arrows[0].classList.add("is-fading-out");
+  libraryHeader.children[0].classList.add("is-fading-out");
+  libraryHeader.children[1].classList.add("is-fading-in");
+
+  for (let i = 0; i < instrumentIcons.length; i++) {
+    if (instrumentIcons[i] != this) {
+      instrumentIcons[i].classList.add("is-fading-out");
+    }
+  }
+
+
+  // Remove non-selected instrument icons and left arrow after animations
+  let currentInstrument = this;
+  setTimeout(function(e) {
+    for (let i = 0; i < instrumentIcons.length; i++) {
+      if (instrumentIcons[i] != currentInstrument) {
+        instrumentIcons[i].classList.add("is-hidden");
+      }
+    }
+
+    arrows[0].classList.add("is-hidden");
+    libraryHeader.children[0].classList.add("is-hidden");
+
+    // New layout for the library
+    currentInstrument.classList.add("instrument-icon--is-larger");
+    instrumentsContainer.classList.add("instruments-container--is-smaller");
+    instrumentsContainer.classList.add("is-smaller");
+
+  }, 1000);
+
+
+  // Add sounds and search bar
+  setTimeout(function(){
+    libraryHeader.children[1].classList.remove("is-hidden");
+    sounds.classList.remove("is-hidden");
+  }, 1000);
+}
 
 
 /*=====================

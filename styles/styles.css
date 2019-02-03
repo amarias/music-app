@@ -74,6 +74,13 @@ img {
   object-position: center;
 }
 
+input {
+  width: 15vw;
+  border: none;
+  text-indent: 1rem;
+  border-radius: 1rem;
+}
+
 
 /* =================== */
 /* ===== Modules ===== */
@@ -182,10 +189,13 @@ img {
 }
 
 .instruments {
-  display: grid;
+  /*display: grid;
   grid-template-columns: repeat(3, 25%);
   grid-auto-flow: column;
-  grid-column-gap: 10%;
+  grid-column-gap: 10%;*/
+
+  display: flex;
+  align-items: center;
 
   width: 75%;
   height: 80%;
@@ -193,17 +203,15 @@ img {
   overflow: hidden;
 }
 
-.instruments-layout {
-  grid-template-columns: 1fr;
-}
-
 .instrument-icon {
   background-color: #eee;
   text-align: center;
 
   box-sizing: border-box;
+  width: 30%;
   height: inherit;
 
+  margin: 0 10%;
   animation: fadeIn 1s;
 }
 
@@ -215,10 +223,11 @@ img {
 .sounds {
   float: right;
 
-  background-color: pink;
+  background-color: #222;
 
   width: 70%;
-  height: 80%;
+  height: 85%;
+
   margin-right: 1vw;
 }
 
@@ -259,14 +268,26 @@ img {
 
 /* ~~~~~ Classes ~~~~~ */
 
-.arrow--is-disabled {
-  opacity: 0.3;
-}
-
 .instruments-container--is-smaller {
   justify-content: center;
   float: left;
   width: 25%;
+}
+
+.instrument-icon--is-larger {
+  width: 100%;
+}
+
+.is-fading-in {
+  animation: fadeIn 1s;
+}
+
+.is-fading-out {
+  animation: fadeOut 1s;
+}
+
+.is-smaller {
+  animation: shrink 1s;
 }
 
 .is-hidden {
@@ -289,4 +310,16 @@ img {
   from { opacity: 0; }
 
   to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+
+  to { opacity: 0; }
+}
+
+@keyframes shrink {
+  from { width: 100%; }
+
+  to { width: 25%; }
 }
