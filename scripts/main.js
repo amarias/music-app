@@ -17,6 +17,7 @@ let arrows = document.getElementsByClassName("arrow");
 let libraryHeader = document.getElementsByClassName("library__header")[0];
 let instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
 let sounds = document.getElementsByClassName("sounds")[0];
+let currentInstrument;
 
 
 /* ===== Event Listeners ===== */
@@ -54,6 +55,7 @@ function setTracksGridContainer() {
   }
 }
 
+
 // Left Arrow = 0; Right Arrow = 1
 function showLeftInstruments() {
 
@@ -68,59 +70,96 @@ function showLeftInstruments() {
   }
 }
 
+
 function showRightInstruments() {
 
-  for (let i = instrumentIcons.length - 1; i >= 0; i--) {
-    if ((i - 1) != -1) {
-      let temp = instrumentsPosition[i];
-      instrumentsPosition[i] = instrumentsPosition[i - 1];
-      instrumentsPosition[i - 1] = temp;
+  if (arrows[0].classList.contains("is-hidden")) {
+
+    removeSounds();
+
+  } else {
+
+    for (let i = instrumentIcons.length - 1; i >= 0; i--) {
+
+      if ((i - 1) != -1) {
+        let temp = instrumentsPosition[i];
+        instrumentsPosition[i] = instrumentsPosition[i - 1];
+        instrumentsPosition[i - 1] = temp;
+      }
+
+      instrumentIcons[i].style.order = instrumentsPosition[i];
     }
 
-    instrumentIcons[i].style.order = instrumentsPosition[i];
   }
 }
+
 
 function showSounds() {
 
-  arrows[0].classList.add("is-fading-out");
-  libraryHeader.children[0].classList.add("is-fading-out");
-  libraryHeader.children[1].classList.add("is-fading-in");
+  currentInstrument = this;
+
+  libraryHeader.children[1].classList.remove("is-fading-out");
+  sounds.classList.remove("is-fading-out");
+
+  setLibraryAnimations();
+
+  setInstrumentsLayout(currentInstrument);
+
+  setSoundsAndSearchBar();
+}
+
+
+function removeSounds() {
+
+  libraryHeader.children[1].classList.add("is-fading-out");
+  sounds.classList.add("is-fading-out");
+
+  setLibraryAnimations();
+
+  setSoundsAndSearchBar();
+
+  setInstrumentsLayout(currentInstrument);
+}
+
+
+function setLibraryAnimations() {
+
+  libraryHeader.children[0].classList.toggle("is-fading-out");
+  arrows[0].classList.toggle("is-fading-out");
 
   for (let i = 0; i < instrumentIcons.length; i++) {
-    if (instrumentIcons[i] != this) {
-      instrumentIcons[i].classList.add("is-fading-out");
+    if (instrumentIcons[i] != currentInstrument) {
+      instrumentIcons[i].classList.toggle("is-fading-out");
     }
   }
+}
 
 
-  // Remove non-selected instrument icons and left arrow after animations
-  let currentInstrument = this;
-  setTimeout(function(e) {
-    for (let i = 0; i < instrumentIcons.length; i++) {
-      if (instrumentIcons[i] != currentInstrument) {
-        instrumentIcons[i].classList.add("is-hidden");
-      }
-    }
-
-    arrows[0].classList.add("is-hidden");
-    libraryHeader.children[0].classList.add("is-hidden");
-
-    // New layout for the library
-    currentInstrument.classList.add("instrument-icon--is-larger");
-    instrumentsContainer.classList.add("instruments-container--is-smaller");
-    instrumentsContainer.classList.add("is-smaller");
-
-  }, 1000);
-
-
-  // Add sounds and search bar
-  setTimeout(function(){
-    libraryHeader.children[1].classList.remove("is-hidden");
-    sounds.classList.remove("is-hidden");
+function setSoundsAndSearchBar() {
+  setTimeout(function() {
+    libraryHeader.children[1].classList.toggle("is-hidden");
+    sounds.classList.toggle("is-hidden");
   }, 1000);
 }
 
+
+function setInstrumentsLayout(currentInstrument) {
+  setTimeout(function() {
+    // Non-selected instrument icons
+    for (let i = 0; i < instrumentIcons.length; i++) {
+      if (instrumentIcons[i] != currentInstrument) {
+        instrumentIcons[i].classList.toggle("is-hidden");
+      }
+    }
+
+    arrows[0].classList.toggle("is-hidden");
+    libraryHeader.children[0].classList.toggle("is-hidden");
+
+    // New layout for the library
+    currentInstrument.classList.toggle("instrument-icon--is-larger");
+    instrumentsContainer.classList.toggle("instruments-container--is-smaller");
+  }, 1000);
+}
 
 /*=====================
          Old Code
