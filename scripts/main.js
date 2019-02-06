@@ -16,8 +16,8 @@ let arrows = document.getElementsByClassName("arrow");
 
 let libraryHeader = document.getElementsByClassName("library__header")[0];
 let instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
-let sounds = document.getElementsByClassName("sounds")[0];
-let currentInstrument;
+let sounds = document.getElementsByClassName("sounds");
+let currentInstrument, currentSounds;
 
 
 /* ===== Event Listeners ===== */
@@ -98,25 +98,50 @@ function showSounds() {
 
   currentInstrument = this;
 
+  // Check h3 to see which instrument was clicked and set currentSounds
+  switch (currentInstrument.children[1].innerText) {
+    case "Guitar":
+      currentSounds = sounds[0];
+      break;
+    case "Piano":
+      currentSounds = sounds[1];
+      break;
+    case "Bass":
+      currentSounds = sounds[2];
+      break;
+    case "Percussion":
+      currentSounds = sounds[3];
+      break;
+    case "Brass":
+      currentSounds = sounds[4];
+      break;
+    default:
+      currentSounds = sounds[5];
+  }
+
   libraryHeader.children[1].classList.remove("is-fading-out");
-  sounds.classList.remove("is-fading-out");
+  currentSounds.classList.remove("is-fading-out");
 
   setLibraryAnimations();
 
   setInstrumentsLayout(currentInstrument);
 
-  setSoundsAndSearchBar();
+  setTimeout(function() {
+    setSoundsAndSearchBar();
+  }, 2000);
 }
 
 
 function removeSounds() {
 
   libraryHeader.children[1].classList.add("is-fading-out");
-  sounds.classList.add("is-fading-out");
+  currentSounds.classList.add("is-fading-out");
 
   setLibraryAnimations();
 
-  setSoundsAndSearchBar();
+  setTimeout(function() {
+    setSoundsAndSearchBar();
+  }, 1000);
 
   setInstrumentsLayout(currentInstrument);
 }
@@ -136,10 +161,8 @@ function setLibraryAnimations() {
 
 
 function setSoundsAndSearchBar() {
-  setTimeout(function() {
-    libraryHeader.children[1].classList.toggle("is-hidden");
-    sounds.classList.toggle("is-hidden");
-  }, 1000);
+  libraryHeader.children[1].classList.toggle("is-hidden");
+  currentSounds.classList.toggle("is-hidden");
 }
 
 

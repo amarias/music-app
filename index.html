@@ -75,7 +75,8 @@
       <button class="arrow left-arrow">&lt;</button>
 
 
-      <div class="instruments"> <!-- Is mayonnaise an instrument? -->
+      <div class="instruments">
+        <!-- Is mayonnaise an instrument? -->
         <div class="instrument-icon instruments__guitar">
           <img class="instrument-img" src="images/music-note.svg" alt="" />
           <h3>Guitar</h3>
@@ -113,39 +114,48 @@
 
 
 
-    <div class="sounds is-hidden">
-
-      <!-- Old Code -->
-
-      <!--      <li id="piano_1" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
-        <audio id="test" preload="metadata">
-          <source src="sounds/test.mp3" type="audio/mpeg"/>
-        </audio>
-        <div class="sound_player">
-          <button class="sound_play-btn">Play</button>
-          <div class="sound_info">
-            <h3>Test</h3>
-            <h4>Me</h4>
-          </div>
-          <div class="sound_time"></div>
-        </div>
-      </li>
-
-      <li id="piano_2" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
-        <audio id="test2" preload="metadata">
-          <source src="sounds/test2.mp3" type="audio/mpeg"/>
-        </audio>
-        <div class="sound_player">
-          <button class="sound_play-btn">Play</button>
-          <div class="sound_info">
-            <h3>Test2</h3>
-            <h4>Me</h4>
-          </div>
-          <div class="sound_time"></div>
-        </div>
-      </li> -->
+    <!-- Sounds -->
+    <ul class="sounds sounds__guitar is-hidden">
+    </ul>
     </div>
 
+    <ul class="sounds sounds__piano is-hidden">
+      <li id="piano_1" class="sound__player" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+        <audio id="test" preload="metadata">
+          <source src="sounds/test.mp3" type="audio/mpeg" />
+        </audio>
+
+        <button class="sounds__play-btn">Play</button>
+        <h3>Test</h3>
+        <span class="time">00:00</span>
+      </li>
+
+      <li id="piano_2" class="sound__player is-highlighted" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+        <audio id="test2" preload="metadata">
+          <source src="sounds/test2.mp3" type="audio/mpeg" />
+        </audio>
+
+        <button class="sounds__play-btn">Play</button>
+        <h3>Test2</h3>
+        <span class="time">00:00</span>
+      </li>
+    </ul>
+
+
+    <ul class="sounds sounds__bass is-hidden">
+    </ul>
+
+
+    <ul class="sounds sounds__percussion is-hidden">
+    </ul>
+
+
+    <ul class="sounds sounds__brass is-hidden">
+    </ul>
+
+
+    <ul class="sounds sounds__sounds is-hidden">
+    </ul>
   </section>
 
 
