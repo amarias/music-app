@@ -20,6 +20,7 @@ let sounds = document.getElementsByClassName("sounds");
 let currentInstrument, currentSounds;
 
 
+
 /* ===== Event Listeners ===== */
 
 arrows[0].addEventListener("click", showLeftInstruments);
@@ -124,7 +125,7 @@ function showSounds() {
 
   setLibraryAnimations();
 
-  setInstrumentsLayout(currentInstrument);
+  setInstrumentsLayout();
 
   setTimeout(function() {
     setSoundsAndSearchBar();
@@ -143,7 +144,7 @@ function removeSounds() {
     setSoundsAndSearchBar();
   }, 1000);
 
-  setInstrumentsLayout(currentInstrument);
+  setInstrumentsLayout();
 }
 
 
@@ -166,7 +167,7 @@ function setSoundsAndSearchBar() {
 }
 
 
-function setInstrumentsLayout(currentInstrument) {
+function setInstrumentsLayout() {
   setTimeout(function() {
     // Non-selected instrument icons
     for (let i = 0; i < instrumentIcons.length; i++) {
