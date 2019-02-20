@@ -19,9 +19,9 @@ var instrumentsContainer = document.getElementsByClassName("instruments-containe
 var sounds = document.getElementsByClassName("sounds");
 var currentInstrument, currentSounds;
 
-
 var playBtns = document.getElementsByClassName("sounds__play-btn");
 
+let search = document.getElementsByName("search-bar")[0];
 
 // Keeps track of audio
 var isPlaying = false;
@@ -43,6 +43,8 @@ for (let i = 0; i < instrumentIcons.length; i++) {
 for (let i = 0; i < playBtns.length; i++) {
   playBtns[i].addEventListener("click", handleSound);
 }
+
+search.addEventListener("change", filter);
 
 
 
@@ -200,22 +202,30 @@ function setInstrumentsLayout() {
   }, 1000);
 }
 
-function getTrackAudioState(){
+function getTrackAudioState() {
 
   // State 0: Startup
-  if(!isPlaying && !isPaused && !isStopped){ return 0;}
+  if (!isPlaying && !isPaused && !isStopped) {
+    return 0;
+  }
 
   // State 1: Audio is currently playing
-  if(isPlaying && !isPaused && !isStopped){ return 1;}
+  if (isPlaying && !isPaused && !isStopped) {
+    return 1;
+  }
 
   // State 2: Audio is paused
-  if(isPlaying && isPaused && !isStopped) { return 2;}
+  if (isPlaying && isPaused && !isStopped) {
+    return 2;
+  }
 
   // State 3: Audio is stopped
   //if(isPlaying && (!isPaused || isPaused) && isStopped){ return 3;}
 
   // State 4: All audio is done playing
-  if(!isPlaying && !isPaused && isStopped){ return 4;}
+  if (!isPlaying && !isPaused && isStopped) {
+    return 4;
+  }
 
   // Error
   return -1;
@@ -226,7 +236,7 @@ function handleSound() {
   let audio = this.parentNode.children[0];
   let btn = this;
 
-  audio.addEventListener("pause", function(){
+  audio.addEventListener("pause", function() {
     btn.innerText = "Play";
   });
 
@@ -238,7 +248,25 @@ function handleSound() {
   } else {
     btn.innerText = "Stop";
     audio.play();
-  }btn
+  }
+}
+
+// Filters through the currently displayed list of sounds based on user input
+function filter() {
+
+  let filter = search.value.toLowerCase();
+
+  // Find the current list of sounds based on its layout; the chosen instrument has a bigger icon
+  let instrument = currentInstrument.children[1].innerText.toLowerCase();
+  let soundList = document.getElementsByClassName("sounds__" + instrument)[0].querySelectorAll("li");
+
+  for (let i = 0; i < soundList.length; i++) {
+    if (soundList[i].children[2].innerText.toLowerCase().indexOf(filter) === -1) {
+      soundList[i].classList.add("is-hidden");
+    } else {
+      soundList[i].classList.remove("is-hidden");
+    }
+  }
 }
 
 
@@ -252,7 +280,6 @@ function handleSound() {
 /*let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
 let backBtn = document.getElementsByClassName("back_btn");
 let soundTime = document.getElementsByClassName("sound_time");
-let search = document.getElementsByName("sound_search-bar")[0];
 
 let tracks = document.getElementsByClassName("editor_track");
 let isDone = [true, true, true]; // Whether each track is done playing audio
@@ -315,25 +342,6 @@ for (let i = 0; i < headerBtns.length; i++) {
     backBtn[i].addEventListener("click", toggleSecondMenu);
   }
 }
-
-// Filters through the currently displayed list of sounds based on user input
-function filter() {
-
-  let filter = search.value.toLowerCase();
-  let soundList = document.getElementsByClassName("sound_container")[0].querySelectorAll("li");
-
-  for (let i = 0; i < soundList.length; i++) {
-    if (soundList[i].innerText.toLowerCase().indexOf(filter) === -1) {
-      soundList[i].classList.add("hide");
-    } else {
-      soundList[i].classList.remove("hide");
-    }
-  }
-
-}
-
-search.addEventListener("change", filter);
-
 
 */
 
