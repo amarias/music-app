@@ -5,19 +5,28 @@
 
 /* ===== Global Variables ===== */
 
-let tracksGridContainer = document.getElementsByClassName("tracks__grid-container")[0];
+var tracksGridContainer = document.getElementsByClassName("tracks__grid-container")[0];
 
-let instrumentsIndex = 0;
-let instrumentGridCols = 3;
-let instrumentsPosition = [1, 2, 3, 4, 5, 6];
-let instruments = document.getElementsByClassName("instruments")[0];
-let instrumentIcons = document.getElementsByClassName("instrument-icon");
-let arrows = document.getElementsByClassName("arrow");
+var instrumentsIndex = 0;
+var instrumentGridCols = 3;
+var instrumentsPosition = [1, 2, 3, 4, 5, 6];
+var instruments = document.getElementsByClassName("instruments")[0];
+var instrumentIcons = document.getElementsByClassName("instrument-icon");
+var arrows = document.getElementsByClassName("arrow");
 
-let libraryHeader = document.getElementsByClassName("library__header")[0];
-let instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
-let sounds = document.getElementsByClassName("sounds");
-let currentInstrument, currentSounds;
+var libraryHeader = document.getElementsByClassName("library__header")[0];
+var instrumentsContainer = document.getElementsByClassName("instruments-container")[0];
+var sounds = document.getElementsByClassName("sounds");
+var currentInstrument, currentSounds;
+
+
+var playBtns = document.getElementsByClassName("sounds__play-btn");
+
+
+// Keeps track of audio
+var isPlaying = false;
+var isPaused = false;
+var isStopped = false;
 
 
 
@@ -29,6 +38,12 @@ arrows[1].addEventListener("click", showRightInstruments);
 for (let i = 0; i < instrumentIcons.length; i++) {
   instrumentIcons[i].addEventListener("click", showSounds);
 }
+
+
+for (let i = 0; i < playBtns.length; i++) {
+  playBtns[i].addEventListener("click", handleSound);
+}
+
 
 
 /* ===== Initialize Page ===== */
@@ -185,6 +200,49 @@ function setInstrumentsLayout() {
   }, 1000);
 }
 
+function getTrackAudioState(){
+
+  // State 0: Startup
+  if(!isPlaying && !isPaused && !isStopped){ return 0;}
+
+  // State 1: Audio is currently playing
+  if(isPlaying && !isPaused && !isStopped){ return 1;}
+
+  // State 2: Audio is paused
+  if(isPlaying && isPaused && !isStopped) { return 2;}
+
+  // State 3: Audio is stopped
+  //if(isPlaying && (!isPaused || isPaused) && isStopped){ return 3;}
+
+  // State 4: All audio is done playing
+  if(!isPlaying && !isPaused && isStopped){ return 4;}
+
+  // Error
+  return -1;
+}
+
+// Handles the play buttons of the Sounds section
+function handleSound() {
+  let audio = this.parentNode.children[0];
+  let btn = this;
+
+  audio.addEventListener("pause", function(){
+    btn.innerText = "Play";
+  });
+
+  // Check if audio is currently playing
+  if (!audio.ended && !audio.paused) {
+    btn.innerText = "Play";
+    audio.pause();
+    audio.currentTime = 0;
+  } else {
+    btn.innerText = "Stop";
+    audio.play();
+  }btn
+}
+
+
+
 /*=====================
          Old Code
   =====================/*
@@ -193,7 +251,6 @@ function setInstrumentsLayout() {
 
 /*let headerBtns = document.getElementsByClassName("header_container")[0].querySelectorAll("button");
 let backBtn = document.getElementsByClassName("back_btn");
-let playBtns = document.getElementsByClassName("sound_play-btn");
 let soundTime = document.getElementsByClassName("sound_time");
 let search = document.getElementsByName("sound_search-bar")[0];
 
@@ -245,60 +302,6 @@ let refNode;*/
   return [container, header, content];
 }
 
-function showSecondMenu(btn) {
-
-  if (btn.innerText.toLowerCase() === "all") {
-    let all = document.getElementsByClassName("sound_list");
-
-    for (let i = 0; i < all.length; i++) {
-      all[i].classList.add("active");
-    }
-  }
-
-  let btnNameArray = getSecondMenuNames(btn);
-
-  document.getElementsByClassName(btnNameArray[0])[0].classList.add("active");
-  document.getElementsByClassName(btnNameArray[2])[0].classList.add("active");
-}
-
-function removeSecondMenu(btn) {
-
-  if (btn.innerText.toLowerCase() === "all") {
-    let all = document.getElementsByClassName("sound_list");
-
-    for (let i = 0; i < all.length; i++) {
-      all[i].classList.remove("active");
-    }
-  }
-
-  let btnNameArray = getSecondMenuNames(btn);
-
-  document.getElementsByClassName(btnNameArray[0])[0].classList.remove("active");
-  document.getElementsByClassName(btnNameArray[2])[0].classList.remove("active");
-}
-
-// Either displays or removes second menu based on what button was pressed
-function toggleSecondMenu() {
-
-  // Search for a previously selected btn
-  let prevSelected = document.querySelector("button.selected");
-
-  if (prevSelected) {
-    prevSelected.classList.remove("selected");
-    removeSecondMenu(prevSelected);
-  } else {
-    this.classList.add("selected");
-    showSecondMenu(this);
-    return;
-  }
-
-  // Check the button type; that it isn't the same button pressed twice or the back btn
-  if ((this != prevSelected) && (this.innerText != backBtn[0].innerText)) {
-    this.classList.add("selected");
-    showSecondMenu(this);
-  }
-
-}
 
 for (let i = 0; i < headerBtns.length; i++) {
   if (headerBtns[i].innerText.toLowerCase() === "tutorial") {
@@ -331,53 +334,8 @@ function filter() {
 
 search.addEventListener("change", filter);
 
-function getAudioElement(btn){
-  let audioName = btn.nextElementSibling.children;
-  let audio = document.getElementById(audioName[0].innerText.toLowerCase());
 
-  return audio;
-}
-
-// Returns a leading zero if the given number is less than 10
-function pad(num) {
-  if (num < 10) {
-    return "0" + num;
-  } else {
-    return num;
-  }
-}
-
-// Handles play buttons on the second menu
-function handleSound() {
-  let audio = getAudioElement(this);
-  let btn = this;
-
-  audio.addEventListener("pause", function(){
-    btn.innerText = "Play";
-  });
-
-  // Check if audio is currently playing
-  if (!audio.ended && !audio.paused) {
-    btn.innerText = "Play";
-    audio.pause();
-    audio.currentTime = 0;
-  } else {
-    btn.innerText = "Stop";
-    audio.play();
-  }
-}
-
-function addTimeStamp(timeStamp, btn) {
-  let audio = getAudioElement(btn);
-  let time = audio.duration;
-
-  timeStamp.innerText = Math.trunc(time/60) + ":" + pad(Math.round((time%60)));
-}
-
-for (let i = 0; i < playBtns.length; i++) {
-  playBtns[i].addEventListener("click", handleSound);
-  addTimeStamp(soundTime[i], playBtns[i]);
-}*/
+*/
 
 /* ~~~~~ sound_list Items: drag and drop handlers ~~~~~ */
 
