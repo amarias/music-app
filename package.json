@@ -1,0 +1,23 @@
+{
+  "name": "music-app",
+  "version": "1.0.0",
+  "description": "A web app designed to create a song using only preset sounds ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node scripts/index",
+    "dev": "nodemon scripts/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amarias/music-app.git"
+  },
+  "author": "Allison Marias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amarias/music-app/issues"
+  },
+  "homepage": "https://github.com/amarias/music-app#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
