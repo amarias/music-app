@@ -1,3 +1,4 @@
+const del = require("del");
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
@@ -5,43 +6,48 @@ const imagemin = require('gulp-imagemin');
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
 
+// Clean Dist
+function clean(){
+    return del('./dist/');
+}
+
 // Copy All HTML Files to Dist
-function copyHtml(finish) {
+function copyHtml(done) {
     gulp.src(['./src/*.html'])
         .pipe(gulp.dest('./dist'));
-    finish();
+    done();
 }
 
 // Copy CSS, Compile Sass and Add Vendor Prefixes
-function styles(finish) {
+function styles(done) {
     gulp.src(['./src/styles/*'])
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(gulp.dest('./dist/styles'));
-    finish();
+    done();
 }
 
 // Concat JS Files then Minify
-function scripts(finish) {
+function scripts(done) {
     gulp.src(['./src/scripts/*.js'])
         .pipe(concat('main.js'))
         .pipe(gulp.dest('./dist/scripts'));
-    finish();
+    done();
 }
 
 // Optimize Images
-function images(finish) {
+function images(done) {
     gulp.src(['./src/images/*'])
         .pipe(imagemin())
         .pipe(gulp.dest('./dist/images'));
-    finish();
+    done();
 }
 
 // Copy Sounds
-function sounds(finish) {
+function sounds(done) {
     gulp.src(['./src/sounds/*'])
         .pipe(gulp.dest('./dist/sounds'));
-    finish();
+    done();
 }
 
 // BrowserSync
@@ -51,9 +57,9 @@ function browser_sync() {
     });
 }
 
-function reload(finish){
+function reload(done){
     browserSync.reload();
-    finish();
+    done();
 }
 
 // Watch
@@ -65,7 +71,9 @@ function watchFiles() {
     gulp.watch('./src/scripts/*.js', gulp.series(scripts, reload));
 }
 
-const build = gulp.parallel(copyHtml, styles, scripts, images, sounds);
+// Tasks
+const build = gulp.series(clean, gulp.parallel(copyHtml, styles, scripts, images, sounds));
 
+exports.clean = clean;
 exports.build = build;
 exports.default = gulp.series(build, gulp.parallel(browser_sync, watchFiles));
