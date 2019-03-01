@@ -1,28 +1,71 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const imagemin = require('gulp-imagemin');
+const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
 
-// Compile Sass
-gulp.task('sass', function(){
-    return gulp.src(['src/styles/*.scss'])
-    .pipe(sass())
-    .pipe(gulp.dest('dist/css'))
-    .pipe(browserSync.stream());
-});
+// Copy All HTML Files to Dist
+function copyHtml(finish) {
+    gulp.src(['./src/*.html'])
+        .pipe(gulp.dest('./dist'));
+    finish();
+}
 
-// Watch and serve
-gulp.task('serve', ['sass'], function(){
+// Copy CSS, Compile Sass and Add Vendor Prefixes
+function styles(finish) {
+    gulp.src(['./src/styles/*'])
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest('./dist/styles'));
+    finish();
+}
+
+// Concat JS Files then Minify
+function scripts(finish) {
+    gulp.src(['./src/scripts/*.js'])
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest('./dist/scripts'));
+    finish();
+}
+
+// Optimize Images
+function images(finish) {
+    gulp.src(['./src/images/*'])
+        .pipe(imagemin())
+        .pipe(gulp.dest('./dist/images'));
+    finish();
+}
+
+// Copy Sounds
+function sounds(finish) {
+    gulp.src(['./src/sounds/*'])
+        .pipe(gulp.dest('./dist/sounds'));
+    finish();
+}
+
+// BrowserSync
+function browser_sync() {
     browserSync.init({
-        server: './src'
+        server: './dist'
     });
+}
 
-    gulp.watch(['src/styles/*.scss'], ['sass']);
-    gulp.watch(['src/*.html']).on('change', browserSync.reload);
-});
+function reload(finish){
+    browserSync.reload();
+    finish();
+}
 
-// add minify task
+// Watch
+function watchFiles() {
+    gulp.watch('./src/images/*', gulp.series(images, reload));
+    gulp.watch('./src/sounds/*', gulp.series(sounds, reload));
+    gulp.watch('./src/*.html', gulp.series(copyHtml, reload));
+    gulp.watch('./src/styles/*.scss', gulp.series(styles, reload));
+    gulp.watch('./src/scripts/*.js', gulp.series(scripts, reload));
+}
 
-// add autoprefixer task
+const build = gulp.parallel(copyHtml, styles, scripts, images, sounds);
 
-// Default
-gulp.task('default', ['serve']);
+exports.build = build;
+exports.default = gulp.series(build, gulp.parallel(browser_sync, watchFiles));
