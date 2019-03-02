@@ -1,4 +1,4 @@
 {
     "root": "dist/",
-    "encoding": "utf8"
+    "clean_urls": true
 }

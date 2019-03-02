@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5000;
 
 const server = http.createServer((req, res) => {
 
-    let filePath = path.join(__dirname, '/../', req.url === '/' ? 'index.html' : req.url);
+    let filePath = path.join(__dirname, '/dist', req.url === '/' ? 'index.html' : req.url);
 
     let extname = path.extname(filePath);
 
@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
         if (err) {
             // Page not found
             if (err.code == 'ENOENT') {
-                fs.readFile(path.join(__dirname, '/../', '404.html'), (err, data) => {
+                fs.readFile(path.join(__dirname, '/dist', '404.html'), (err, data) => {
                     res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.end(data, 'utf8');
                 });
