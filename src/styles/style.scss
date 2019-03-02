@@ -1,6 +1,7 @@
 /*=====================
     Table of Contents
   =====================
+  == Variables
   == Tags
   == Modules
     - Headers
@@ -15,6 +16,19 @@
     - Media Queries
   == Animations
 */
+/* ===================== */
+/* ===== Variables ===== */
+/* ===================== */
+
+$background: #222;
+$text: #B0B0B0;
+$primary: #333;
+$accent: #45B294;
+$highlight: #444;
+$black: #111;
+$white: #eee;
+
+
 /* ================ */
 /* ===== Tags ===== */
 /* ================ */
@@ -28,8 +42,8 @@ body {
   grid-template-columns: 5vw minmax(50vw, 1fr) 3vw 1fr 5vw;
   grid-template-rows: 5vh 5vh 2fr 5vh 1fr 5vh;
 
-  background-color: #222;
-  color: #B0B0B0;
+  background-color: $background;
+  color: $text;
 
   width: 100vw;
   height: 100vh;
@@ -104,7 +118,7 @@ ul {
 }
 
 .main-header__help-btn {
-  border: 0.1rem solid #B0B0B0;
+  border: 0.1rem solid $text;
   border-radius: 100%;
 }
 
@@ -115,14 +129,14 @@ ul {
 
   height: 20%;
 
-  border-bottom: #45B294 solid 0.3rem;
+  border-bottom: $accent solid 0.3rem;
 }
 
 /* ~~~~~ Section: Tracks ~~~~~ */
 
 .tracks, .library, .animation {
-  background-color: #333;
-  box-shadow: 0 1rem 2rem #111;
+  background-color: $primary;
+  box-shadow: 0 1rem 2rem $black;
 }
 
 .tracks {
@@ -150,7 +164,7 @@ ul {
   justify-content: center;
   align-items: center;
 
-  border-bottom: #222 solid 0.2rem;
+  border-bottom: $background solid 0.2rem;
 }
 
 .tracks__grid-container {
@@ -159,7 +173,7 @@ ul {
   grid-template-rows: repeat(3, 1fr);
   grid-gap: 1px;
 
-  background-color: #333;
+  background-color: $primary;
 
   width: 85%;
   height: 85%;
@@ -169,7 +183,7 @@ ul {
 }
 
 .track-empty-space {
-  background-color: #222;
+  background-color: $background;
 }
 
 /* ~~~~~ Section: Library ~~~~~ */
@@ -205,7 +219,7 @@ ul {
 }
 
 .instrument-icon {
-  background-color: #eee;
+  background-color: $white;
   text-align: center;
 
   box-sizing: border-box;
@@ -225,7 +239,7 @@ ul {
 .sounds {
   float: right;
 
-  background-color: #222;
+  background-color: $background;
 
   width: 70%;
   height: 80%;
@@ -239,7 +253,7 @@ ul {
   justify-content: space-between;
   align-items: center;
 
-  background-color: #222;
+  background-color: $background;
 
   width: 100%;
   height: 5vh;
@@ -257,17 +271,17 @@ ul {
   grid-row-start: 5;
   grid-row-end: 6;
 
-  background-color: #111;
+  background-color: $black;
 
-  border: 0.2rem solid #333;
+  border: 0.2rem solid $primary;
   border-radius: 2rem;
 }
 
 /* ~~~~~ Buttons ~~~~~ */
 
 .arrow {
-  background-color: #45B294;
-  color: #333;
+  background-color: $accent;
+  color: $primary;
 
   font-size: 2.5rem;
   font-weight: bold;
@@ -297,7 +311,7 @@ ul {
 }
 
 .is-highlighted {
-  background-color: #444;
+  background-color: $highlight;
 }
 
 .is-fading-in {
