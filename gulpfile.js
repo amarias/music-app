@@ -1,7 +1,9 @@
 const del = require("del");
 const gulp = require('gulp');
+var csso = require('gulp-csso');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
+const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
@@ -14,6 +16,7 @@ function clean(){
 // Copy All HTML Files to Dist
 function copyHtml(done) {
     gulp.src(['./src/*.html'])
+        .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(gulp.dest('./dist'));
     done();
 }
@@ -23,6 +26,7 @@ function styles(done) {
     gulp.src(['./src/styles/*'])
         .pipe(sass())
         .pipe(autoprefixer())
+        .pipe(csso())
         .pipe(gulp.dest('./dist/styles'));
     done();
 }
