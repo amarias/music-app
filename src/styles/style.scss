@@ -28,6 +28,8 @@ $highlight: #444;
 $black: #111;
 $white: #eee;
 
+$toolTipWidth: 10vw;
+
 
 /* ================ */
 /* ===== Tags ===== */
@@ -118,8 +120,24 @@ ul {
 }
 
 .main-header__help-btn {
+  position: relative;
   border: 0.1rem solid $text;
   border-radius: 100%;
+}
+
+.help-btn__tooltip {
+  background-color: $primary;
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  display: none;
+  position: absolute;
+
+  width: $toolTipWidth;
+  padding: 0.5rem;
+
+  border-radius: 0.5rem;
+  box-shadow: -0.3rem 0.4rem $accent;
 }
 
 .tracks__header, .library__header {
@@ -328,7 +346,27 @@ ul {
 
 /* ~~~~~ Pseudo Classes ~~~~~ */
 
+.main-header__help-btn:hover {
+  div {
+  display: inline-block;
+  left: calc(-#{$toolTipWidth} - 1rem - 2rem); // toolTipWidth - padding - arrow
+  }
+}
 
+.help-btn__tooltip::after {
+  position: absolute;
+  top: 10%;
+  right: -1.8rem;
+
+  width: 0;
+  height: 0;
+
+  border: 1rem solid transparent;
+  border-left: 1rem solid $accent;
+
+  z-index: -1;
+  content: "";
+}
 
 /* ~~~~~ Media Queries ~~~~~ */
 
