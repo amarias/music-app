@@ -28,6 +28,15 @@ $highlight: #444;
 $black: #111;
 $white: #eee;
 
+
+$guitar: blue;
+$piano: yellow;
+$bass: red;
+$percussion: purple;
+$brass: orange;
+$sounds: green;
+
+
 $toolTipWidth: 10vw;
 
 
@@ -204,6 +213,14 @@ ul {
   background-color: $background;
 }
 
+.track-filled-space {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
 /* ~~~~~ Section: Library ~~~~~ */
 
 .library {
@@ -326,6 +343,30 @@ ul {
 
 .instrument-icon--is-larger {
   width: 100%;
+}
+
+.is-filled--guitar {
+  background-color: $guitar;
+}
+
+.is-filled--piano {
+  background-color: $piano;
+}
+
+.is-filled--bass {
+  background-color: $bass;
+}
+
+.is-filled--percussion {
+  background-color: $percussion;
+}
+
+.is-filled--brass {
+  background-color: $brass;
+}
+
+.is-filled--sounds {
+  background-color: $sounds;
 }
 
 .is-highlighted {
