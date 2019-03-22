@@ -33,7 +33,7 @@ function styles(done) {
 
 // Concat JS Files then Minify
 function scripts(done) {
-    gulp.src(['./src/scripts/*.js'])
+    gulp.src(['./src/scripts/main.js', './src/scripts/*.js'])
         .pipe(concat('main.js'))
         .pipe(gulp.dest('./dist/scripts'));
     done();
