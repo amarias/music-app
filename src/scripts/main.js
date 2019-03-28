@@ -2,6 +2,10 @@
 /* ===== Global Variables ===== */
 
 var tracksGridContainer = document.getElementsByClassName("tracks__grid-container")[0];
+// Based on the columns and rows of tracks__grid-container
+var columns = 12;
+var rows = 3;
+var soundGrid = [];
 
 var instrumentsIndex = 0;
 var instrumentGridCols = 3;
@@ -23,6 +27,9 @@ var search = document.getElementsByName("search-bar")[0];
 var isPlaying = false;
 var isPaused = false;
 var isStopped = false;
+
+var AudioContext = window.AudioContext || window.webkitAudioContext; // Cross browser variant
+var audioContext = new AudioContext();
 
 
 /* ===== Initialize Page ===== */

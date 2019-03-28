@@ -1,4 +1,4 @@
-/* ===== Event Listeners ===== */
+/* ===== Library Event Listeners ===== */
 
 arrows[0].addEventListener("click", showLeftInstruments);
 arrows[1].addEventListener("click", showRightInstruments);

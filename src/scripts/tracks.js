@@ -3,21 +3,23 @@
 
 
 function setTracksGridContainer() {
-
-    // Based on the columns and rows of tracks__grid-container
-    let columns = 12;
-    let rows = 3;
   
-    for (let i = 0; i < columns; i++) {
-      for (let j = 0; j < rows; j++) {
+  let emptySpaceCount = 0;
+
+    for (let i = 0; i < rows; i++) {
+      soundGrid[i] = []; // Make soundGrid a 2D array
+      for (let j = 0; j < columns; j++) {
   
         let trackEmptySpace = document.createElement("div");
         trackEmptySpace.ondragover = onDragOver;
         trackEmptySpace.ondragleave = onDragLeave;
         trackEmptySpace.ondrop = onDrop;
         trackEmptySpace.classList.add("track-empty-space");
+        trackEmptySpace.id = "empty-space-" + emptySpaceCount++;
   
         tracksGridContainer.appendChild(trackEmptySpace);
+
+        soundGrid[i][j] = -1; // currently has no sound
       }
     }
   }
