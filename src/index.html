@@ -116,14 +116,13 @@
 
     <!-- Sounds -->
 
-    <!-- li ids must follow convention of soundtype_number -->
-    <!-- audio id must not contain "-" in its name -->
+    <!-- all ids used in JS must follow convention of: 'name--number' -->
     <ul class="sounds sounds__guitar is-hidden">
     </ul>
     </div>
 
     <ul class="sounds sounds__piano is-hidden">
-      <li id="piano_1" class="sound__player" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+      <li id="piano--1" class="sound__player" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
         <audio id="test" preload="metadata">
           <source src="sounds/test.mp3" type="audio/mpeg" />
         </audio>
@@ -133,7 +132,7 @@
         <span class="time">00:00</span>
       </li>
 
-      <li id="piano_2" class="sound__player is-highlighted" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
+      <li id="piano--2" class="sound__player is-highlighted" draggable="true" ondragstart="onDragStart(event);" ondragend="onDragEnd(event);">
         <audio id="test2" preload="metadata">
           <source src="sounds/test2.mp3" type="audio/mpeg" />
         </audio>

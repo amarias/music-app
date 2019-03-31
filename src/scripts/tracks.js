@@ -15,7 +15,7 @@ function setTracksGridContainer() {
         trackEmptySpace.ondragleave = onDragLeave;
         trackEmptySpace.ondrop = onDrop;
         trackEmptySpace.classList.add("track-empty-space");
-        trackEmptySpace.id = "empty-space-" + emptySpaceCount++;
+        trackEmptySpace.id = "empty-space--" + emptySpaceCount++;
   
         tracksGridContainer.appendChild(trackEmptySpace);
 

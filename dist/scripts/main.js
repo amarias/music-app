@@ -609,13 +609,13 @@ function createSoundEl(data, audio, gridSpace){
     soundEl.appendChild(name);
     
     soundEl.classList.add('track-filled-space');
-    soundEl.classList.add('is-filled--' + data.split('_')[0]);
+    soundEl.classList.add('is-filled--' + data.split('--')[0]);
     
     soundEl.draggable = true;
     soundEl.ondragstart = soundDragStart;
     soundEl.ondragend = onDragEnd;
 
-    soundEl.id = 'filled-space-' + gridSpace;
+    soundEl.id = 'filled-space--' + gridSpace;
 
     return soundEl;
 }
@@ -624,16 +624,25 @@ function appendSoundGrid(audio, gridSpace){
     let trackRow = Math.floor(gridSpace/columns);
     let trackCol = gridSpace%columns;
 
-    if(!soundGrid.includes(audio.id)){
-        audio.id += '-' + gridSpace;
+    let isInSoundGrid = false;
+
+    soundGrid.forEach(el => {
+        if(el.includes(audio.id)){
+            isInSoundGrid = true;
+        }
+    });
+
+    if(!isInSoundGrid){
+        audio.id += '--' + gridSpace;
+        
     } else {
-        let prevAudioId = audio.id.split('-');
+        let prevAudioId = audio.id.split('--');
         let prevGridSpace = prevAudioId[1];
         let prevTrackRow = Math.floor(prevGridSpace/columns);
         let prevTrackCol = prevGridSpace%columns;
 
         soundGrid[prevTrackRow][prevTrackCol] = -1;
-        audio.id = prevAudioId[0] + '-' + gridSpace;
+        audio.id = prevAudioId[0] + '--' + gridSpace;
     }
 
     soundGrid[trackRow][trackCol] = audio.id;
@@ -678,7 +687,7 @@ function onDragOver(e){
             }
         });
     } else {
-        data = data.split('_')[0];
+        data = data.split('--')[0];
     }
 
     let color = getSoundColor(data);
@@ -697,9 +706,9 @@ function onDragLeave(e){
 
 function onDrop(e) {
     e.preventDefault();
-    
+
     let data = e.dataTransfer.getData('text');
-    let gridSpace = e.target.id.split('-')[2];
+    let gridSpace = e.target.id.split('--')[1];
     let el = document.getElementById(data);
     let audio;
 
@@ -711,14 +720,15 @@ function onDrop(e) {
         } else {
             audio = el.children[0];
 
-            let oldElId = el.id.split('-');
-            el.id = oldElId[0] + "-" + oldElId[1] + '-' + gridSpace;
+            let oldElId = el.id.split('--');
+            el.id = oldElId[0] + '--' + gridSpace;
             e.target.appendChild(el);
         }
 
-        e.currentTarget.style = '';
         appendSoundGrid(audio, gridSpace);
     }
+
+    e.currentTarget.style = '';
 }
 
 /* ===== Tracks Functions ===== */
@@ -737,7 +747,7 @@ function setTracksGridContainer() {
         trackEmptySpace.ondragleave = onDragLeave;
         trackEmptySpace.ondrop = onDrop;
         trackEmptySpace.classList.add("track-empty-space");
-        trackEmptySpace.id = "empty-space-" + emptySpaceCount++;
+        trackEmptySpace.id = "empty-space--" + emptySpaceCount++;
   
         tracksGridContainer.appendChild(trackEmptySpace);
 
