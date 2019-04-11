@@ -149,7 +149,7 @@ function setLibraryAnimations() {
   }
 
   
-// Handles the play buttons of the Sounds section
+// Handles the play buttons of the Library's sounds
 function handleSound() {
     let audio = this.parentNode.children[0];
     let btn = this;

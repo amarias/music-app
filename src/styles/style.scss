@@ -10,6 +10,7 @@
       ~ Library
       ~ Sound Visualization
     - Buttons
+    - Notification
   == States
     - Classes
     - Pseudo Classes
@@ -325,6 +326,29 @@ ul {
   border: 0;
 
   margin-bottom: 2vh;
+}
+
+/* ~~~~~ Notification ~~~~~ */
+
+.notification {
+  background-color: $primary;
+  color: $text;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10%;
+
+  width: fit-content;
+
+  text-align: center;
+  white-space: nowrap;
+
+  padding: 1rem;
+  margin: 0 auto;
+
+  border: 0.1rem solid $accent;
+  border-radius: 1rem;
 }
 
 

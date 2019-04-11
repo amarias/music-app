@@ -1,3 +1,21 @@
+/* ===== Tracks Event Listeners ===== */
+
+tracksBtn.addEventListener("click", function(){ 
+  if(tracksBtn.value === 'paused'){
+    tracksBtn.value = 'playing';
+    tracksBtn.innerHTML = 'Pause';
+    audioContext.resume().then(() => { playTrackAudio(); });
+  } else {
+    tracksBtn.value = 'paused';
+    tracksBtn.innerHTML = 'Play';
+    unpause = true;
+    pauseTrackAudio();
+  }
+});
+
+skipToStartBtn.addEventListener("click", skipToStartTrackAudio);
+
+
 
 /* ===== Tracks Functions ===== */
 
@@ -19,37 +37,9 @@ function setTracksGridContainer() {
   
         tracksGridContainer.appendChild(trackEmptySpace);
 
-        soundGrid[i][j] = -1; // currently has no sound
+        // Adds a -1 instead of an empty audio buffer 
+        // to help keep track of empty spaces
+        soundGrid[i][j] = -1;
       }
     }
-  }
-
-  
-function getTrackAudioState() {
-
-    // State 0: Startup
-    if (!isPlaying && !isPaused && !isStopped) {
-      return 0;
-    }
-  
-    // State 1: Audio is currently playing
-    if (isPlaying && !isPaused && !isStopped) {
-      return 1;
-    }
-  
-    // State 2: Audio is paused
-    if (isPlaying && isPaused && !isStopped) {
-      return 2;
-    }
-  
-    // State 3: Audio is stopped
-    //if(isPlaying && (!isPaused || isPaused) && isStopped){ return 3;}
-  
-    // State 4: All audio is done playing
-    if (!isPlaying && !isPaused && isStopped) {
-      return 4;
-    }
-  
-    // Error
-    return -1;
   }

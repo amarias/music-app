@@ -1,6 +1,39 @@
 /* ===== Sounds Functions ===== */
 
-// Colors found in styles.scss
+function playTrackAudio(){
+    if(!unpause){        
+        timeAtStart = audioContext.currentTime;
+        setAudioBufferSourceNodes();
+    } else {
+        time = audioContext.currentTime;
+        offset = audioContext.currentTime - timeAtStart;
+        if (!offset){
+            time = 0;
+            offset = 0;
+        }
+        setAudioBufferSourceNodes(time, offset);
+        unpause = false;
+    }
+  }
+
+function pauseTrackAudio(){    
+    currentBufferSources.forEach(source => {
+        source.stop();
+    });        
+    audioContext.suspend();
+}
+
+function skipToStartTrackAudio(){
+    currentBufferSources[0].onended = false;
+    timeAtStart = NaN;
+
+    pauseTrackAudio();
+    if(tracksBtn.value === 'playing'){
+        audioContext.resume().then(playTrackAudio());   
+    }
+  }
+
+// Color variables found in styles.scss
 function getSoundColor(soundType){
     switch(soundType){
         case 'guitar':
@@ -20,11 +53,10 @@ function getSoundColor(soundType){
     }
 }
 
-function createSoundEl(data, audio, gridSpace){
+function createSoundEl(data, gridSpace){
     let name = document.getElementById(data).children[2].cloneNode(true);
-    
     let soundEl = document.createElement('div');
-    soundEl.appendChild(audio);
+
     soundEl.appendChild(name);
     
     soundEl.classList.add('track-filled-space');
@@ -39,32 +71,108 @@ function createSoundEl(data, audio, gridSpace){
     return soundEl;
 }
 
-function appendSoundGrid(audio, gridSpace){
-    let trackRow = Math.floor(gridSpace/columns);
-    let trackCol = gridSpace%columns;
-
-    let isInSoundGrid = false;
-
-    soundGrid.forEach(el => {
-        if(el.includes(audio.id)){
-            isInSoundGrid = true;
+// Returns the column number of the farthest right sound
+function getEndPlaybackColumn(){
+    for(let col = columns - 1; col >= 0; col--) {
+        for(let row = 0; row < rows; row++){
+            let gridSpace = (row * columns) + col;
+            if(!isEmptySpace(gridSpace)){
+                return col;
+            }
         }
-    });
+    }
+    return 0;
+}
 
-    if(!isInSoundGrid){
-        audio.id += '--' + gridSpace;
-        
-    } else {
-        let prevAudioId = audio.id.split('--');
-        let prevGridSpace = prevAudioId[1];
-        let prevTrackRow = Math.floor(prevGridSpace/columns);
-        let prevTrackCol = prevGridSpace%columns;
+function getAudioFilePath(audioEl){
+    let source = audioEl.children[0];
+    return source.getAttribute('src');
+}
 
-        soundGrid[prevTrackRow][prevTrackCol] = -1;
-        audio.id = prevAudioId[0] + '--' + gridSpace;
+function getEmptyAudioBuffer(){
+    // Create a 5 second buffer
+    let emptyAudioBuffer = audioContext.createBuffer(2, audioContext.sampleRate * 5, audioContext.sampleRate);
+    return emptyAudioBuffer;
+}
+
+async function getAudioBuffer(filepath){
+    const audioResponse = await fetch(filepath);
+    const audioData = await audioResponse.arrayBuffer();
+    const audioBuffer = await audioContext.decodeAudioData(audioData);
+    return audioBuffer;
+}
+
+function getAudioBufferArray(){
+    let audioBufferArray = [];
+    let endPlaybackColumn = getEndPlaybackColumn();
+
+    for (let i = 0; i < rows; i++) {
+        let tempAudioBuffer = audioContext.createBuffer(2, audioContext.sampleRate * ((endPlaybackColumn + 1) * 5), audioContext.sampleRate);
+        let tempFloat32Array = tempAudioBuffer.getChannelData(0);
+        let length = 0; // increments of 5 seconds
+          
+        for (let j = 0; j < columns; j++) {
+            let audioBuffer = soundGrid[i][j];
+            
+            if((audioBuffer === -1) && (j <= endPlaybackColumn)){
+                if (length === 0){
+                    tempFloat32Array.set(getEmptyAudioBuffer().getChannelData(0));
+                } else {
+                    tempFloat32Array.set(getEmptyAudioBuffer().getChannelData(0), length);
+                }
+            } else if (audioBuffer != -1){
+                if (length === 0){
+                    tempFloat32Array.set(audioBuffer.getChannelData(0));
+                } else {
+                    tempFloat32Array.set(audioBuffer.getChannelData(0), length);
+                }
+            }
+            length = length + (audioContext.sampleRate * 5);          
+        }
+          
+        tempAudioBuffer.getChannelData(0).set(tempFloat32Array);
+        audioBufferArray.push(tempAudioBuffer);
     }
 
-    soundGrid[trackRow][trackCol] = audio.id;
+    return audioBufferArray;
+  }
+
+function setAudioBufferSourceNodes(time = 0, offset = 0){
+    currentBufferSources = [];
+    currentAudioBuffers = getAudioBufferArray();
+    currentAudioBuffers.forEach(audioBuffer => {
+        let source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(audioContext.destination);
+        source.start(time, offset);
+        currentBufferSources.push(source);
+        currentBufferSources[0].onended = handleEnd;
+    });
+}
+
+function handleEnd(){
+    if ((tracksBtn.value === 'playing') && !unpause){
+        tracksBtn.value = 'paused';
+        tracksBtn.innerHTML = 'Play';
+    }
+}
+
+async function appendSoundGrid(audioFilePath, gridSpace){
+    let trackRow = Math.floor(gridSpace/columns);
+    let trackCol = gridSpace%columns;
+    soundGrid[trackRow][trackCol] = await getAudioBuffer(audioFilePath);
+}
+
+function setSoundGridIndex(oldIndex, newIndex){
+    let prevTrackRow = Math.floor(oldIndex/columns);
+    let prevTrackCol = oldIndex%columns;
+    
+    let newTrackRow = Math.floor(newIndex/columns);
+    let newTrackCol = newIndex%columns;
+    
+    let temp = soundGrid[prevTrackRow][prevTrackCol];
+    soundGrid[prevTrackRow][prevTrackCol] = -1;
+    soundGrid[newTrackRow][newTrackCol] = temp;
 }
 
 function isEmptySpace(gridSpace){
@@ -76,8 +184,7 @@ function isEmptySpace(gridSpace){
 
 /* ~~~~~  Drag and Drop Functions ~~~~~ */
 
-// Handlers with the word "sound" in front are for elements on the grid
-
+// Handler for elements on the grid
 function soundDragStart(e){
     e.currentTarget.style.opacity = 0.5;
     e.dataTransfer.setData('text', e.currentTarget.id);
@@ -126,25 +233,30 @@ function onDragLeave(e){
 function onDrop(e) {
     e.preventDefault();
 
-    let data = e.dataTransfer.getData('text');
-    let gridSpace = e.target.id.split('--')[1];
-    let el = document.getElementById(data);
-    let audio;
+    if (tracksBtn.value === 'paused') {
 
-    if(isEmptySpace(gridSpace)){
+        let data = e.dataTransfer.getData('text');
+        let gridSpace = e.target.id.split('--')[1];
+        let el = document.getElementById(data);
+        let audio;
 
-        if(e.dataTransfer.dropEffect === 'copy'){
-            audio = el.children[0].cloneNode(true);
-            e.target.appendChild(createSoundEl(data, audio, gridSpace));
-        } else {
-            audio = el.children[0];
+        if(isEmptySpace(gridSpace)){
 
-            let oldElId = el.id.split('--');
-            el.id = oldElId[0] + '--' + gridSpace;
-            e.target.appendChild(el);
+            if(e.dataTransfer.dropEffect === 'copy'){
+                audio = el.children[0];
+                let audioFilePath = getAudioFilePath(audio);
+                appendSoundGrid(audioFilePath, gridSpace);
+                e.target.appendChild(createSoundEl(data, gridSpace));
+
+            } else {
+                let oldElId = el.id.split('--');
+                el.id = oldElId[0] + '--' + gridSpace;
+                e.target.appendChild(el);            
+                setSoundGridIndex(oldElId[1], gridSpace);
+            }
         }
-
-        appendSoundGrid(audio, gridSpace);
+    } else {
+        notification('Drop Function Unavailable During Playback'); 
     }
 
     e.currentTarget.style = '';
