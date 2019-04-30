@@ -27,8 +27,9 @@ var tracksBtn = document.getElementsByClassName('tracks__btn')[0];
 var skipToStartBtn = document.getElementsByClassName('skip-to-start-btn')[0];
 
 // Keep track of audio and audio time
-var currentBufferSources = [];
+var sources = [];
 var currentAudioBuffers = []; 
+var analysers = [];
 var timeAtStart, offset;
 var unpause = false;
 
@@ -37,11 +38,22 @@ var audioContext = new AudioContext(); // is suspended at startup
 
 var notificationBox = document.getElementsByClassName('notification')[0];
 
+var gl;
+var canvas = document.getElementsByClassName('canvas')[0];
+var animationTimer;
+var colorTimer; 
+var colorLocation;
 
 
 /* ===== Initialize Page ===== */
 
 setTracksGridContainer();
+
+// Make sure DOM is fully loaded and styled 
+window.addEventListener('load', function(){
+    setWebGLRenderingContext();
+}, false);
+
 
 
 /* ===== Library Event Listeners ===== */
@@ -235,7 +247,7 @@ function filter() {
   }
 /* ===== Notification Functions ===== */
 
-function notification(message){
+function notifyUser(message){
     notificationBox.innerHTML = message;
     notificationBox.classList.add('is-fading-in');
     notificationBox.classList.remove('is-fading-out');
@@ -254,7 +266,7 @@ function notification(message){
 function playTrackAudio(){
     if(!unpause){        
         timeAtStart = audioContext.currentTime;
-        setAudioBufferSourceNodes();
+        setNodes();
     } else {
         time = audioContext.currentTime;
         offset = audioContext.currentTime - timeAtStart;
@@ -262,43 +274,78 @@ function playTrackAudio(){
             time = 0;
             offset = 0;
         }
-        setAudioBufferSourceNodes(time, offset);
+        setNodes(time, offset);
         unpause = false;
+    }
+
+    if(gl){
+        setVisualizations();
     }
   }
 
 function pauseTrackAudio(){    
-    currentBufferSources.forEach(source => {
+    sources.forEach(source => {
         source.stop();
     });        
     audioContext.suspend();
+    if(gl){
+        pauseVisualizations();
+    }
 }
 
 function skipToStartTrackAudio(){
-    currentBufferSources[0].onended = false;
+    sources[0].onended = false;
     timeAtStart = NaN;
 
     pauseTrackAudio();
+    if(gl){
+        endVisualizations();
+    }
     if(tracksBtn.value === 'playing'){
         audioContext.resume().then(playTrackAudio());   
     }
   }
 
-// Color variables found in styles.scss
-function getSoundColor(soundType){
+  /**
+   * Returns the color representing the given sound/instrument.
+   * 
+   * @param {*} soundType The id of a sound element. 
+   * The id must be of the following conventions: 
+   * instrument--number or filled-space--number.
+   * @param {*} getRGBA If set to true, the function will return
+   * an array of float color values,
+   * @returns {*} Color value. Will return -1 if no color value is found.
+   */
+function getSoundColor(soundType, getRGBA = false){
+
+    if(soundType.includes('filled-space')){
+        let el = document.getElementById(soundType);
+
+        if (el){
+            el.classList.forEach(name => {
+                if(name.includes('is-filled')){
+                    soundType = name.split('--')[1];
+                }
+            });
+        }
+    } else {
+        soundType = soundType.split('--')[0];
+    }
+
+    // Color variables also found in styles.scss
     switch(soundType){
         case 'guitar':
-            return 'blue';
+            return getRGBA ? [0, 0, 0, 1.0] : 'blue';
         case 'piano':
-            return 'yellow';
+            return getRGBA ? [1.0, 1.0, 0, 1.0] : 'yellow';
         case 'bass':
-            return 'red';
+            return getRGBA ? [0, 0, 0, 1.0] : 'red';
         case 'percussion':
-            return 'purple';
+            return getRGBA ? [0, 0, 0, 1.0] : 'purple';
         case 'brass':
-            return 'orange';
+            return getRGBA ? [0, 0, 0, 1.0] : 'orange';
         case 'sounds':
-            return 'green';
+            return getRGBA ? [0, 0, 0, 1.0] : 'green';
         default:
             return -1;
     }
@@ -322,7 +369,10 @@ function createSoundEl(data, gridSpace){
     return soundEl;
 }
 
-// Returns the column number of the farthest right sound
+/**
+ * Returns the column number of the farthest right sound.
+ * Is used for finding the track with the longest audio length.
+ */
 function getEndPlaybackColumn(){
     for(let col = columns - 1; col >= 0; col--) {
         for(let row = 0; row < rows; row++){
@@ -339,13 +389,19 @@ function getAudioFilePath(audioEl){
     let source = audioEl.children[0];
     return source.getAttribute('src');
 }
-
+/**
+ *  Returns a 5 second, empty audio buffer
+ */
 function getEmptyAudioBuffer(){
-    // Create a 5 second buffer
     let emptyAudioBuffer = audioContext.createBuffer(2, audioContext.sampleRate * 5, audioContext.sampleRate);
     return emptyAudioBuffer;
 }
 
+/**
+ * Creates and returns an audio buffer from the given filepath
+ * @async
+ * @param {*} filepath Audio src
+ */
 async function getAudioBuffer(filepath){
     const audioResponse = await fetch(filepath);
     const audioData = await audioResponse.arrayBuffer();
@@ -353,6 +409,12 @@ async function getAudioBuffer(filepath){
     return audioBuffer;
 }
 
+/**
+ * Combines audio to form one single audio buffer per track, 
+ * each the same length of time. 
+ * 
+ * @returns An array of audio buffers, one audio buffer per track
+ */
 function getAudioBufferArray(){
     let audioBufferArray = [];
     let endPlaybackColumn = getEndPlaybackColumn();
@@ -381,34 +443,60 @@ function getAudioBufferArray(){
             length = length + (audioContext.sampleRate * 5);          
         }
           
-        tempAudioBuffer.getChannelData(0).set(tempFloat32Array);
-        audioBufferArray.push(tempAudioBuffer);
+        tempAudioBuffer.getChannelData(0).set(tempFloat32Array); // left
+        tempAudioBuffer.getChannelData(1).set(tempFloat32Array); // right
+        audioBufferArray.push(tempAudioBuffer);        
     }
 
     return audioBufferArray;
   }
 
-function setAudioBufferSourceNodes(time = 0, offset = 0){
-    currentBufferSources = [];
+function setNodes(time = 0, offset = 0){
+    sources = [];
+    analysers = [];
     currentAudioBuffers = getAudioBufferArray();
+
     currentAudioBuffers.forEach(audioBuffer => {
         let source = audioContext.createBufferSource();
+        let analyser = audioContext.createAnalyser();
+
         source.buffer = audioBuffer;
-        source.connect(audioContext.destination);
+        source.onended = handleEnd;
+    
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        sources.push(source);
+        analysers.push(analyser);
+
         source.start(time, offset);
-        currentBufferSources.push(source);
-        currentBufferSources[0].onended = handleEnd;
     });
 }
 
+/**
+ * Handler for the audio buffer source node. 
+ * Runs when the audio ends.
+ */
 function handleEnd(){
     if ((tracksBtn.value === 'playing') && !unpause){
         tracksBtn.value = 'paused';
         tracksBtn.innerHTML = 'Play';
+        if(gl){
+            endVisualizations();
+        }
     }
 }
 
-async function appendSoundGrid(audioFilePath, gridSpace){
+/**
+ * Saves the given audio to the soundGrid array.
+ * Audio is saved as an audio buffer.
+ * 
+ * @async
+ * @param {*} data id of the dragged element
+ * @param {*} audioFilePath Audio src
+ * @param {*} gridSpace Represents a position on the soundGrid based on the number of columns and rows. See setTracksGridContainer().
+ */
+async function appendSoundGrid(data, audioFilePath, gridSpace){
     let trackRow = Math.floor(gridSpace/columns);
     let trackCol = gridSpace%columns;
     soundGrid[trackRow][trackCol] = await getAudioBuffer(audioFilePath);
@@ -433,6 +521,8 @@ function isEmptySpace(gridSpace){
     return (soundGrid[trackRow][trackCol] === -1) ? true : false;
 }
 
+
+
 /* ~~~~~  Drag and Drop Functions ~~~~~ */
 
 // Handler for elements on the grid
@@ -454,18 +544,6 @@ function onDragEnd(e) {
 
 function onDragOver(e){
     let data = e.dataTransfer.getData('text');
-
-    if(data.includes('filled-space')){
-        let el = document.getElementById(data);
-
-        el.classList.forEach(name => {
-            if(name.includes('is-filled')){
-                data = name.split('--')[1];
-            }
-        });
-    } else {
-        data = data.split('--')[0];
-    }
 
     let color = getSoundColor(data);
 
@@ -496,7 +574,7 @@ function onDrop(e) {
             if(e.dataTransfer.dropEffect === 'copy'){
                 audio = el.children[0];
                 let audioFilePath = getAudioFilePath(audio);
-                appendSoundGrid(audioFilePath, gridSpace);
+                appendSoundGrid(data, audioFilePath, gridSpace);
                 e.target.appendChild(createSoundEl(data, gridSpace));
 
             } else {
@@ -507,7 +585,7 @@ function onDrop(e) {
             }
         }
     } else {
-        notification('Drop Function Unavailable During Playback'); 
+        notifyUser('Drop Function Unavailable During Playback'); 
     }
 
     e.currentTarget.style = '';
@@ -533,7 +611,13 @@ skipToStartBtn.addEventListener("click", skipToStartTrackAudio);
 
 /* ===== Tracks Functions ===== */
 
-
+/**
+ * Sets elements (trackEmptySpace) on the track, 
+ * and initializes soundGrid[][] with -1.
+ * 
+ * In other functions, the emptySpaceCount variable, used to create the trackEmptySpace id,
+ * is referred to as gridSpace.
+ */
 function setTracksGridContainer() {
   
   let emptySpaceCount = 0;
@@ -559,5 +643,198 @@ function setTracksGridContainer() {
   }
 /* ===== Sound Visualization Functions ===== */
 
-// Use AnalyserNode (Web Audio API)
-// then pass output to a <canvas>
+/**
+ * Set up webGl rendering context and canvas
+ */
+function setWebGLRenderingContext(){
+    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+    if(!gl){
+        notifyUser('Unable to initialize sound visualizations. Your browser or machine might not support WebGL');
+        return;
+    }
+
+    setCanvas();
+}
+
+function setCanvas(){
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Sets the color for the audio visualizations.
+ * Color changes every 5 seconds.
+ */
+function setColor(track){
+
+    // Get the column the audio is currently playing at
+    let col = (offset > 0) ? (offset/5) : 0;
+    let gridspace = (track * columns) + col;
+
+    let elId = 'filled-space--' + gridspace;
+    let color = getSoundColor(elId, true);
+
+    if(color === -1){
+        color = [0, 0, 0, 1];
+    }
+
+    gl.uniform4fv(colorLocation, new Float32Array(color));
+}
+
+/**
+ * Creates and returns a WebGlShader of the given type using 
+ * the given GLSL source code. 
+ * Compiles the GLSL shader into binary data to be used by a WebGlProgram.
+ * 
+ * @param {*} src A string of GLSL source code
+ * @param {*} type The type of shader to create. Must be either gl.VERTEX_SHADER or gl.FRAGMENT_SHADER
+ * @returns {WebGLShader}
+ */
+function createShader(src, type){
+    var shader = gl.createShader(type);
+    
+    gl.shaderSource(shader, src);
+    gl.compileShader(shader);
+
+    // Notify the user if the shader failed
+    if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+        notifyUser('Unable to compile the shader program. See console for more info');
+        console.log(gl.getProgramInfoLog(shader));
+        return;
+    }   
+
+    return shader;
+}
+
+/**
+ * Creates and returns a WebGlProgram. 
+ * Attaches a vertex and fragment shader to the program 
+ * based on the given strings and links the program to the WebGl rendering context.
+ * 
+ * @param {*} vstr A vertex shader string written in GLSL
+ * @param {*} fstr A fragment shader string written in GLSL
+ * @returns {WebGLProgram} A WebGlProgram
+ */
+function createProgram(vstr, fstr){
+    var program = gl.createProgram();
+    
+    var vertexShader = createShader(vstr, gl.VERTEX_SHADER);
+    var fragmentShader = createShader(fstr, gl.FRAGMENT_SHADER);
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    gl.linkProgram(program);
+
+    // Notify the user if the shader program failed
+    if(!gl.getProgramParameter(program, gl.LINK_STATUS)){
+        notifyUser('Unable to initiliaze the shader program. See console for more info');
+        console.log(gl.getProgramInfoLog(program));
+        return;
+    }   
+
+    return program;
+}
+
+/**
+ * Set up the audio visualizations
+ */
+function setVisualizations(){
+    // In case of canvas resizing
+    setCanvas();
+
+    var vertexPosBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
+
+    // Shaders
+    var vs = `
+        attribute vec2 vertexPosition;
+
+        void main() {
+            gl_Position = vec4(vertexPosition, 0, 1);
+        }
+    `;
+
+    var fs = `
+        precision mediump float;
+        uniform vec4 color;
+
+        void main() {
+            gl_FragColor = color;
+        }
+    `;
+
+    var program = createProgram(vs, fs);
+
+    program.vertexPosAttrib = gl.getAttribLocation(program, 'vertexPosition');
+    colorLocation = gl.getUniformLocation(program, 'color');
+
+    gl.enableVertexAttribArray(program.vertexPosAttrib);
+    gl.vertexAttribPointer(program.vertexPosAttrib, 2, gl.FLOAT, false, 0, 0);
+
+    gl.useProgram(program);
+
+    draw();
+}
+
+
+function draw(){
+    animationTimer = requestAnimationFrame(draw);
+    
+    // In case of canvas resizing
+    setCanvas();
+
+    for (let track = 0; track < analysers.length; track++) {
+        setColor(track);
+        
+        // Write to the buffer
+        gl.bufferData(gl.ARRAY_BUFFER, getCoordinates(track), gl.STATIC_DRAW);
+
+        gl.drawArrays(gl.LINE_STRIP, 0, analysers[track].fftSize);
+    }
+}
+
+/**
+ * Returns a Float32Array filled with data representing x and y coordinates. 
+ * All data is between -1 and 1 (clipspace).
+ * Even indices are the x-coordinates and odd indices are the y-coordinates. 
+ * The y-coordinate represents audio waveform (time domain) data.
+ * 
+ * @param {*} track The track (row) whose coordinates we want
+ * @returns {Float32Array}
+ */
+function getCoordinates(track){
+    var bufferLength = analysers[track].fftSize;
+    var waveform = new Float32Array(bufferLength);
+    analysers[track].getFloatTimeDomainData(waveform);
+
+    let coordinates = new Float32Array(bufferLength*2);
+    var width = 2/bufferLength; // width of each x-coordinate from 0.0 -> 2.0
+
+    for (let i = 0, j = 0; i < coordinates.length; i++) {
+        if (i % 2 === 0) {
+            coordinates[i] = i*width - 1; // Set each x-coordinate from -1 -> 1
+        } else {
+            coordinates[i] = waveform[j++]; // y-coordinate
+        }
+    }    
+
+    return coordinates;
+}
+
+function pauseVisualizations(){
+    cancelAnimationFrame(animationTimer);
+}
+
+/**
+ * Called when track audio ends. See handleEnd().
+ */
+function endVisualizations(){
+    pauseVisualizations();
+    gl.clearColor(0, 0, 0.0, 0.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+}
+

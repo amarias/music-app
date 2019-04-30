@@ -19,7 +19,13 @@ skipToStartBtn.addEventListener("click", skipToStartTrackAudio);
 
 /* ===== Tracks Functions ===== */
 
-
+/**
+ * Sets elements (trackEmptySpace) on the track, 
+ * and initializes soundGrid[][] with -1.
+ * 
+ * In other functions, the emptySpaceCount variable, used to create the trackEmptySpace id,
+ * is referred to as gridSpace.
+ */
 function setTracksGridContainer() {
   
   let emptySpaceCount = 0;

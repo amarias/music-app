@@ -162,7 +162,7 @@ ul {
 
 /* ~~~~~ Section: Tracks ~~~~~ */
 
-.tracks, .library, .visualization {
+.tracks, .library {
   background-color: $primary;
   box-shadow: 0 1rem 2rem $black;
 }
@@ -307,10 +307,20 @@ ul {
   grid-row-start: 5;
   grid-row-end: 6;
 
+  max-height: 50vh;
+  overflow: hidden;
+}
+
+.canvas {
   background-color: $black;
+
+  width: 100%;
+  height: 100%;
 
   border: 0.2rem solid $primary;
   border-radius: 2rem;
+
+  box-shadow: 0 1rem 2rem $black;
 }
 
 /* ~~~~~ Buttons ~~~~~ */
@@ -349,6 +359,8 @@ ul {
 
   border: 0.1rem solid $accent;
   border-radius: 1rem;
+
+  box-shadow: 0.4rem 0.5rem 0.5rem $black;
 }
 
 

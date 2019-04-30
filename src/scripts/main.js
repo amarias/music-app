@@ -27,8 +27,9 @@ var tracksBtn = document.getElementsByClassName('tracks__btn')[0];
 var skipToStartBtn = document.getElementsByClassName('skip-to-start-btn')[0];
 
 // Keep track of audio and audio time
-var currentBufferSources = [];
+var sources = [];
 var currentAudioBuffers = []; 
+var analysers = [];
 var timeAtStart, offset;
 var unpause = false;
 
@@ -37,9 +38,20 @@ var audioContext = new AudioContext(); // is suspended at startup
 
 var notificationBox = document.getElementsByClassName('notification')[0];
 
+var gl;
+var canvas = document.getElementsByClassName('canvas')[0];
+var animationTimer;
+var colorTimer; 
+var colorLocation;
 
 
 /* ===== Initialize Page ===== */
 
 setTracksGridContainer();
+
+// Make sure DOM is fully loaded and styled 
+window.addEventListener('load', function(){
+    setWebGLRenderingContext();
+}, false);
+
 

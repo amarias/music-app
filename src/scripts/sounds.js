@@ -3,7 +3,7 @@
 function playTrackAudio(){
     if(!unpause){        
         timeAtStart = audioContext.currentTime;
-        setAudioBufferSourceNodes();
+        setNodes();
     } else {
         time = audioContext.currentTime;
         offset = audioContext.currentTime - timeAtStart;
@@ -11,43 +11,78 @@ function playTrackAudio(){
             time = 0;
             offset = 0;
         }
-        setAudioBufferSourceNodes(time, offset);
+        setNodes(time, offset);
         unpause = false;
+    }
+
+    if(gl){
+        setVisualizations();
     }
   }
 
 function pauseTrackAudio(){    
-    currentBufferSources.forEach(source => {
+    sources.forEach(source => {
         source.stop();
     });        
     audioContext.suspend();
+    if(gl){
+        pauseVisualizations();
+    }
 }
 
 function skipToStartTrackAudio(){
-    currentBufferSources[0].onended = false;
+    sources[0].onended = false;
     timeAtStart = NaN;
 
     pauseTrackAudio();
+    if(gl){
+        endVisualizations();
+    }
     if(tracksBtn.value === 'playing'){
         audioContext.resume().then(playTrackAudio());   
     }
   }
 
-// Color variables found in styles.scss
-function getSoundColor(soundType){
+  /**
+   * Returns the color representing the given sound/instrument.
+   * 
+   * @param {*} soundType The id of a sound element. 
+   * The id must be of the following conventions: 
+   * instrument--number or filled-space--number.
+   * @param {*} getRGBA If set to true, the function will return
+   * an array of float color values,
+   * @returns {*} Color value. Will return -1 if no color value is found.
+   */
+function getSoundColor(soundType, getRGBA = false){
+
+    if(soundType.includes('filled-space')){
+        let el = document.getElementById(soundType);
+
+        if (el){
+            el.classList.forEach(name => {
+                if(name.includes('is-filled')){
+                    soundType = name.split('--')[1];
+                }
+            });
+        }
+    } else {
+        soundType = soundType.split('--')[0];
+    }
+
+    // Color variables also found in styles.scss
     switch(soundType){
         case 'guitar':
-            return 'blue';
+            return getRGBA ? [0, 0, 0, 1.0] : 'blue';
         case 'piano':
-            return 'yellow';
+            return getRGBA ? [1.0, 1.0, 0, 1.0] : 'yellow';
         case 'bass':
-            return 'red';
+            return getRGBA ? [0, 0, 0, 1.0] : 'red';
         case 'percussion':
-            return 'purple';
+            return getRGBA ? [0, 0, 0, 1.0] : 'purple';
         case 'brass':
-            return 'orange';
+            return getRGBA ? [0, 0, 0, 1.0] : 'orange';
         case 'sounds':
-            return 'green';
+            return getRGBA ? [0, 0, 0, 1.0] : 'green';
         default:
             return -1;
     }
@@ -71,7 +106,10 @@ function createSoundEl(data, gridSpace){
     return soundEl;
 }
 
-// Returns the column number of the farthest right sound
+/**
+ * Returns the column number of the farthest right sound.
+ * Is used for finding the track with the longest audio length.
+ */
 function getEndPlaybackColumn(){
     for(let col = columns - 1; col >= 0; col--) {
         for(let row = 0; row < rows; row++){
@@ -88,13 +126,19 @@ function getAudioFilePath(audioEl){
     let source = audioEl.children[0];
     return source.getAttribute('src');
 }
-
+/**
+ *  Returns a 5 second, empty audio buffer
+ */
 function getEmptyAudioBuffer(){
-    // Create a 5 second buffer
     let emptyAudioBuffer = audioContext.createBuffer(2, audioContext.sampleRate * 5, audioContext.sampleRate);
     return emptyAudioBuffer;
 }
 
+/**
+ * Creates and returns an audio buffer from the given filepath
+ * @async
+ * @param {*} filepath Audio src
+ */
 async function getAudioBuffer(filepath){
     const audioResponse = await fetch(filepath);
     const audioData = await audioResponse.arrayBuffer();
@@ -102,6 +146,12 @@ async function getAudioBuffer(filepath){
     return audioBuffer;
 }
 
+/**
+ * Combines audio to form one single audio buffer per track, 
+ * each the same length of time. 
+ * 
+ * @returns An array of audio buffers, one audio buffer per track
+ */
 function getAudioBufferArray(){
     let audioBufferArray = [];
     let endPlaybackColumn = getEndPlaybackColumn();
@@ -130,34 +180,60 @@ function getAudioBufferArray(){
             length = length + (audioContext.sampleRate * 5);          
         }
           
-        tempAudioBuffer.getChannelData(0).set(tempFloat32Array);
-        audioBufferArray.push(tempAudioBuffer);
+        tempAudioBuffer.getChannelData(0).set(tempFloat32Array); // left
+        tempAudioBuffer.getChannelData(1).set(tempFloat32Array); // right
+        audioBufferArray.push(tempAudioBuffer);        
     }
 
     return audioBufferArray;
   }
 
-function setAudioBufferSourceNodes(time = 0, offset = 0){
-    currentBufferSources = [];
+function setNodes(time = 0, offset = 0){
+    sources = [];
+    analysers = [];
     currentAudioBuffers = getAudioBufferArray();
+
     currentAudioBuffers.forEach(audioBuffer => {
         let source = audioContext.createBufferSource();
+        let analyser = audioContext.createAnalyser();
+
         source.buffer = audioBuffer;
-        source.connect(audioContext.destination);
+        source.onended = handleEnd;
+    
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        sources.push(source);
+        analysers.push(analyser);
+
         source.start(time, offset);
-        currentBufferSources.push(source);
-        currentBufferSources[0].onended = handleEnd;
     });
 }
 
+/**
+ * Handler for the audio buffer source node. 
+ * Runs when the audio ends.
+ */
 function handleEnd(){
     if ((tracksBtn.value === 'playing') && !unpause){
         tracksBtn.value = 'paused';
         tracksBtn.innerHTML = 'Play';
+        if(gl){
+            endVisualizations();
+        }
     }
 }
 
-async function appendSoundGrid(audioFilePath, gridSpace){
+/**
+ * Saves the given audio to the soundGrid array.
+ * Audio is saved as an audio buffer.
+ * 
+ * @async
+ * @param {*} data id of the dragged element
+ * @param {*} audioFilePath Audio src
+ * @param {*} gridSpace Represents a position on the soundGrid based on the number of columns and rows. See setTracksGridContainer().
+ */
+async function appendSoundGrid(data, audioFilePath, gridSpace){
     let trackRow = Math.floor(gridSpace/columns);
     let trackCol = gridSpace%columns;
     soundGrid[trackRow][trackCol] = await getAudioBuffer(audioFilePath);
@@ -182,6 +258,8 @@ function isEmptySpace(gridSpace){
     return (soundGrid[trackRow][trackCol] === -1) ? true : false;
 }
 
+
+
 /* ~~~~~  Drag and Drop Functions ~~~~~ */
 
 // Handler for elements on the grid
@@ -203,18 +281,6 @@ function onDragEnd(e) {
 
 function onDragOver(e){
     let data = e.dataTransfer.getData('text');
-
-    if(data.includes('filled-space')){
-        let el = document.getElementById(data);
-
-        el.classList.forEach(name => {
-            if(name.includes('is-filled')){
-                data = name.split('--')[1];
-            }
-        });
-    } else {
-        data = data.split('--')[0];
-    }
 
     let color = getSoundColor(data);
 
@@ -245,7 +311,7 @@ function onDrop(e) {
             if(e.dataTransfer.dropEffect === 'copy'){
                 audio = el.children[0];
                 let audioFilePath = getAudioFilePath(audio);
-                appendSoundGrid(audioFilePath, gridSpace);
+                appendSoundGrid(data, audioFilePath, gridSpace);
                 e.target.appendChild(createSoundEl(data, gridSpace));
 
             } else {
@@ -256,7 +322,7 @@ function onDrop(e) {
             }
         }
     } else {
-        notification('Drop Function Unavailable During Playback'); 
+        notifyUser('Drop Function Unavailable During Playback'); 
     }
 
     e.currentTarget.style = '';

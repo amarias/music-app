@@ -1,6 +1,6 @@
 /* ===== Notification Functions ===== */
 
-function notification(message){
+function notifyUser(message){
     notificationBox.innerHTML = message;
     notificationBox.classList.add('is-fading-in');
     notificationBox.classList.remove('is-fading-out');
