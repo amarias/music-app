@@ -24,10 +24,14 @@
   <header class="main-header">
 
     <h1 class="main-header__logo">Music Web App</h1>
+    
+    <div class="main-header__right-icons">
+      <button class="visuals-btn primary-btn">Visuals</button>
 
-    <button class="main-header__help-btn">?
-      <div class="help-btn__tooltip">App Under Construction</div>
-    </button>
+      <button class="help-btn">?
+        <div class="help-btn__tooltip">App Under Construction</div>
+      </button>
+    </div>
 
   </header>
 
@@ -162,8 +166,8 @@
 
 
   <!-- Sound Visualization -->
-  <section class="visualization">
-    <canvas class="canvas">
+  <section>
+    <canvas class="canvas is-hidden">
       Sound Visualizations
     </canvas>
   </section>

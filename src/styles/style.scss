@@ -51,7 +51,7 @@ html {
 
 body {
   display: grid;
-  grid-template-columns: 5vw minmax(50vw, 1fr) 3vw 1fr 5vw;
+  grid-template-columns: 5vw 1fr 3vw auto 5vw;
   grid-template-rows: 5vh 5vh 2fr 5vh 1fr 5vh;
 
   background-color: $background;
@@ -94,8 +94,9 @@ img {
 }
 
 input {
-  width: 15vw;
+  width: 50%;
   border: none;
+  margin-left: 25%;
   text-indent: 1rem;
   border-radius: 1rem;
   animation: fadeIn 1s;
@@ -127,27 +128,6 @@ ul {
   grid-row-end: 2;
 
   padding: 1rem 2rem;
-}
-
-.main-header__help-btn {
-  position: relative;
-  border: 0.1rem solid $text;
-  border-radius: 100%;
-}
-
-.help-btn__tooltip {
-  background-color: $primary;
-  font-size: 1.4rem;
-  font-weight: bold;
-
-  display: none;
-  position: absolute;
-
-  width: $toolTipWidth;
-  padding: 0.5rem;
-
-  border-radius: 0.5rem;
-  box-shadow: -0.3rem 0.4rem $accent;
 }
 
 .tracks__header, .library__header {
@@ -226,11 +206,13 @@ ul {
 
 .library {
   grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column-end: 5;
   grid-row-start: 5;
   grid-row-end: 6;
 
+  width: 100%;
   border-radius: 2rem;
+  transition: width 1s;
 }
 
 .instruments-container {
@@ -255,14 +237,11 @@ ul {
 }
 
 .instrument-icon {
-  background-color: $white;
+  flex: 25% 1 0;
+  height: inherit;
+  
   text-align: center;
 
-  box-sizing: border-box;
-  width: 30%;
-  height: inherit;
-
-  margin: 0 10%;
   animation: fadeIn 1s;
   transition: width 1s 0 0.5s;
 }
@@ -309,6 +288,11 @@ ul {
 
   max-height: 50vh;
   overflow: hidden;
+
+  border: 0.2rem solid $primary;
+  border-radius: 2rem;
+
+  box-shadow: 0 1rem 2rem $black;
 }
 
 .canvas {
@@ -316,11 +300,6 @@ ul {
 
   width: 100%;
   height: 100%;
-
-  border: 0.2rem solid $primary;
-  border-radius: 2rem;
-
-  box-shadow: 0 1rem 2rem $black;
 }
 
 /* ~~~~~ Buttons ~~~~~ */
@@ -336,6 +315,38 @@ ul {
   border: 0;
 
   margin-bottom: 2vh;
+}
+
+.primary-btn {
+  color: $text;
+  opacity: 0.7;
+
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+
+  border-radius: 1rem;
+  border: 0.1rem solid $text;
+}
+
+.help-btn {
+  position: relative;
+  border: 0.1rem solid $text;
+  border-radius: 100%;
+}
+
+.help-btn__tooltip {
+  background-color: $primary;
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  display: none;
+  position: absolute;
+
+  width: $toolTipWidth;
+  padding: 0.5rem;
+
+  border-radius: 0.5rem;
+  box-shadow: -0.3rem 0.4rem $accent;
 }
 
 /* ~~~~~ Notification ~~~~~ */
@@ -370,6 +381,22 @@ ul {
 /* ================== */
 
 /* ~~~~~ Classes ~~~~~ */
+
+.primary-btn--is-selected {
+  color: $accent;
+  opacity: 1;
+  border-color: $accent;
+}
+
+// New columns needed or else animations look stiff
+.body--new-grid-columns {
+  grid-template-columns: 5vw auto 3vw auto 5vw;
+}
+
+.library--is-smaller {
+  grid-column-end: 3;
+  width: 55vw;
+}
 
 .instruments-container--is-smaller {
   justify-content: center;
@@ -423,7 +450,11 @@ ul {
 
 /* ~~~~~ Pseudo Classes ~~~~~ */
 
-.main-header__help-btn:hover {
+.primary-btn:hover {
+  opacity: 1;
+}
+
+.help-btn:hover {
   div {
   display: inline-block;
   left: calc(-#{$toolTipWidth} - 1rem - 2rem); // toolTipWidth - padding - arrow
@@ -446,6 +477,12 @@ ul {
 }
 
 /* ~~~~~ Media Queries ~~~~~ */
+
+@media screen and (max-width: 1600px){
+  .instrument-icon {
+    flex: 33% 1 0;
+  }
+}
 
 
 

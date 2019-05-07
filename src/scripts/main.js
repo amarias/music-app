@@ -8,7 +8,6 @@ var rows = 3;
 var soundGrid = [];
 
 var instrumentsIndex = 0;
-var instrumentGridCols = 3;
 var instrumentsPosition = [1, 2, 3, 4, 5, 6];
 var instruments = document.getElementsByClassName('instruments')[0];
 var instrumentIcons = document.getElementsByClassName('instrument-icon');
@@ -38,20 +37,18 @@ var audioContext = new AudioContext(); // is suspended at startup
 
 var notificationBox = document.getElementsByClassName('notification')[0];
 
-var gl;
 var canvas = document.getElementsByClassName('canvas')[0];
+var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 var animationTimer;
 var colorTimer; 
 var colorLocation;
+
+var visualsBtn = document.getElementsByClassName('visuals-btn')[0];
 
 
 /* ===== Initialize Page ===== */
 
 setTracksGridContainer();
 
-// Make sure DOM is fully loaded and styled 
-window.addEventListener('load', function(){
-    setWebGLRenderingContext();
-}, false);
 
 

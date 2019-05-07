@@ -1,17 +1,53 @@
-/* ===== Sound Visualization Functions ===== */
+/* ===== Sound Visualization Event Listeners ===== */
 
-/**
- * Set up webGl rendering context and canvas
- */
-function setWebGLRenderingContext(){
-    gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-
+visualsBtn.addEventListener('click', function(){
     if(!gl){
         notifyUser('Unable to initialize sound visualizations. Your browser or machine might not support WebGL');
         return;
     }
 
-    setCanvas();
+    visualsBtn.classList.toggle('primary-btn--is-selected');
+    if(visualsBtn.classList.contains('primary-btn--is-selected')){
+        addCanvas();
+    } else {
+        removeCanvas();
+    }
+});
+
+
+
+/* ===== Sound Visualization Functions ===== */
+
+function addCanvas(){
+    var library = document.getElementsByClassName('library')[0];
+    library.classList.toggle('library--is-smaller');
+    
+    setTimeout(() => {
+        var body = document.getElementsByTagName('body')[0];
+        body.classList.toggle('body--new-grid-columns');
+
+        canvas.parentElement.classList.remove('is-fading-out');
+        canvas.parentElement.classList.add('is-fading-in');
+        canvas.parentElement.classList.toggle('visualization');
+        canvas.classList.remove('is-hidden');
+        setCanvas();
+    }, 1000);
+}
+
+function removeCanvas(){
+    canvas.parentElement.classList.remove('is-fading-in');
+    canvas.parentElement.classList.add('is-fading-out');
+
+    var body = document.getElementsByTagName('body')[0];
+    body.classList.toggle('body--new-grid-columns');
+
+    setTimeout(function() {
+        canvas.parentElement.classList.toggle('visualization');
+        canvas.classList.add('is-hidden');
+
+        var library = document.getElementsByClassName('library')[0];
+        library.classList.toggle('library--is-smaller');
+    }, 1000);
 }
 
 function setCanvas(){
@@ -19,6 +55,16 @@ function setCanvas(){
     canvas.height = canvas.clientHeight;
 
     gl.viewport(0, 0, canvas.width, canvas.height);
+}
+
+/**
+ * Will return true if canvas is hidden by the user (visuals btn is not toggled) 
+ */
+function canvasIsHidden(){
+    if(canvas.classList.contains('is-hidden')){
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -100,6 +146,10 @@ function createProgram(vstr, fstr){
  * Set up the audio visualizations
  */
 function setVisualizations(){
+    if(canvasIsHidden()){
+        return;
+    }
+
     // In case of canvas resizing
     setCanvas();
 
@@ -183,6 +233,9 @@ function getCoordinates(track){
 }
 
 function pauseVisualizations(){
+    if(canvasIsHidden()){
+        return;
+    }
     cancelAnimationFrame(animationTimer);
 }
 
@@ -190,6 +243,9 @@ function pauseVisualizations(){
  * Called when track audio ends. See handleEnd().
  */
 function endVisualizations(){
+    if(canvasIsHidden()){
+        return;
+    }
     pauseVisualizations();
     gl.clearColor(0, 0, 0.0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
