@@ -1,7 +1,9 @@
 # Music Web App
 Ongoing personal project designed to create a song using only preset original sounds. 
 
-Check out the [live](http://musicapp.allisonmarias.com/) website. More features coming soon.
+![](waveform.gif)
+
+*Check out the [live](http://musicapp.allisonmarias.com/) website. More features coming soon.*
 
 # :musical_note: How It Works
 There are 3 tracks, each 60 seconds long. Drag and drop different sounds and create a new song. 
